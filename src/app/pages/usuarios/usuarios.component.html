@@ -1,1 +1,34 @@
-<p>usuarios works!</p>
+<mat-card style="margin: 20px;">
+  <mat-card-header>
+    <mat-card-title>Usuarios del Sistema STE</mat-card-title>
+  </mat-card-header>
+
+  <mat-table [dataSource]="usuarios()" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.id}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="nombreCompleto">
+      <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.nombre}} {{user.ap_paterno}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="username">
+      <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.username}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="estado">
+      <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+      <mat-cell *matCellDef="let user"> 
+        <span [style.color]="user.activo === 1 ? 'green' : 'red'">
+          {{user.activo === 1 ? 'Activo' : 'Inactivo'}}
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+  </mat-table>
+</mat-card>
