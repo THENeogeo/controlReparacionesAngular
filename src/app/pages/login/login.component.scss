@@ -1,17 +1,117 @@
-.login-container {
+/* Contenedor principal que centra la tarjeta en la pantalla */
+.login-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f0f2f5; /* Un gris muy claro de fondo */
 }
 
-.login-card {
-  width: 400px;
-  padding: 20px;
+/* La tarjeta principal: flexbox divide la pantalla en dos columnas */
+.login-split-card {
+  display: flex;
+  width: 900px; /* Ancho fijo para un diseño elegante */
+  max-width: 90%;
+  border-radius: 12px; /* Esquinas redondeadas suaves */
+  overflow: hidden; /* Asegura que los paneles interiores no se salgan */
+  background-color: white;
 }
 
-.full-width {
+/* Panel Izquierdo: Azul vibrante */
+.panel-left {
+  flex: 1; /* Ocupa el 50% del ancho */
+  background-color: #277af7; /* El azul vibrante de image_12.png */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 2rem;
+}
+
+.welcome-text-container {
+  text-align: center;
+}
+
+.welcome-heading {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Panel Derecho: Gris claro con el formulario */
+.panel-right {
+  flex: 1; /* Ocupa el 50% del ancho */
+  background-color: #f8f9fc; /* Gris claro de image_12.png */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.form-container {
   width: 100%;
-  margin-top: 10px;
+  max-width: 350px; /* Centra y limita el ancho del formulario */
+  text-align: center;
+}
+
+.system-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+/* Nuevo Grupo de Entrada CSS: ícono dentro de cuadro sólido */
+.custom-input-group {
+  display: flex;
+  align-items: center;
+  background-color: #e2e6ea; /* Gris sólido de image_12.png */
+  border: 1px solid #e2e6ea; /* Borde del mismo color para un efecto de cuadro sólido */
+  border-radius: 8px; /* Redondeado suave */
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.custom-input-group mat-icon {
+  color: #6c757d; /* Ícono gris */
+  margin-right: 0.5rem;
+}
+
+.custom-input-group input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: #333;
+  padding: 0.25rem;
+}
+
+/* Estilo para los placeholders personalizados */
+.custom-input-group input::placeholder {
+  color: #6c757d;
+  opacity: 0.8;
+}
+
+/* Estilo para quitar el borde de Material cuando está enfocado */
+.custom-input-group input:focus {
+  outline: none;
+}
+
+/* Botón de login personalizado */
+.login-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  background-color: #277af7; /* Azul vibrante */
+  color: rgb(48, 120, 252);
+  margin-top: 1rem;
+}
+
+/* Texto de copyright en la parte inferior */
+.copyright-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 3rem;
 }

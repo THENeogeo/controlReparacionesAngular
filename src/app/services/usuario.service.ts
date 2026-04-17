@@ -9,9 +9,13 @@ import { HttpClient } from '@angular/common/http';
 export class UsuarioService {
 
   private http = inject(HttpClient);
-  private apiUrl = '${environment.apiUrl}/usuarios';
 
   listarUsuarios() {
-    return this.http.get<Usuario[]>('${this.apiUrl}/listarUsuarios');
+    return this.http.get<Usuario[]>(environment.baseUrl + '/usuarios/listarUsuarios');
   }
+
+  guardarUsuario(usuario: any) {
+    return this.http.post(environment.baseUrl + '/usuarios/guardarUsuario', usuario);
+  }
+  
 }

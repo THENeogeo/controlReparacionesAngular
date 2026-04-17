@@ -1,0 +1,19 @@
+<div class="admin-layout-container">
+  <header class="bg-primary text-white p-3 shadow-sm d-flex justify-content-between">
+    <h4 class="m-0">STE - Control de Reparaciones</h4>
+    <button mat-button class="text-white">Cerrar Sesión</button>
+  </header>
+
+  <div class="d-flex">
+    <aside style="width: 250px; min-height: 100vh; background: #343a40; color: white;" class="p-3">
+      <p>Menú Lateral</p>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link text-white" href="/usuarios">Usuarios</a></li>
+      </ul>
+    </aside>
+
+    <main class="flex-grow-1 bg-light p-4">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

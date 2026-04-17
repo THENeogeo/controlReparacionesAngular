@@ -1,34 +1,174 @@
-<mat-card style="margin: 20px;">
-  <mat-card-header>
-    <mat-card-title>Usuarios del Sistema STE</mat-card-title>
-  </mat-card-header>
+<div class="card shadow mb-4 mt-4 mx-3">
+  <div class="card-header d-flex flex-row align-items-center justify-content-between bg-white py-3">
+    <h6 class="m-0 fw-bold text-primary">Administración de usuarios</h6>
+    <span class="text-muted small fw-bold">Administración / Usuarios</span>
+  </div>
+  
+  <div class="card-body">
+    <div class="mb-3">
+      <button type="button" class="btn btn-outline-success" (click)="openAgregarUsuarioModal()">
+        <span class="fa fa-user-plus me-2"></span>
+        Agregar Nuevo Usuario
+      </button>
+    </div>
 
-  <mat-table [dataSource]="usuarios()" class="mat-elevation-z8">
-    <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.id}} </mat-cell>
-    </ng-container>
+    <div class="alert alert-info rounded d-flex align-items-center mx-auto">
+      <div class="icon me-3">
+        <i class="fa fa-search fa-2x"></i>
+      </div>
+      <div>
+        <h5 class="mb-0 fw-bold">Usuarios Registrados</h5>
+        <small><strong>Criterios de Búsqueda:</strong> Nombre, Apellidos, Username</small>
+      </div>
+    </div>
 
-    <ng-container matColumnDef="nombreCompleto">
-      <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.nombre}} {{user.ap_paterno}} </mat-cell>
-    </ng-container>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="dataSource" class="table table-bordered table-hover w-100 mb-0">
+        
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Nombre </th>
+          <td mat-cell *matCellDef="let user"> {{user.nombre}} </td>
+        </ng-container>
 
-    <ng-container matColumnDef="username">
-      <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.username}} </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="ap_paterno">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Apellido Paterno </th>
+          <td mat-cell *matCellDef="let user"> {{user.ap_paterno}} </td>
+        </ng-container>
 
-    <ng-container matColumnDef="estado">
-      <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
-      <mat-cell *matCellDef="let user"> 
-        <span [style.color]="user.activo === 1 ? 'green' : 'red'">
-          {{user.activo === 1 ? 'Activo' : 'Inactivo'}}
-        </span>
-      </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="ap_materno">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Apellido Materno </th>
+          <td mat-cell *matCellDef="let user"> {{user.ap_materno}} </td>
+        </ng-container>
 
-    <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
-  </mat-table>
-</mat-card>
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Username </th>
+          <td mat-cell *matCellDef="let user"> <strong>&#64;{{user.username}}</strong> </td>
+        </ng-container>
+
+        <ng-container matColumnDef="editar">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Editar </th>
+          <td mat-cell *matCellDef="let user" class="text-center">
+            <button class="btn btn-sm btn-primary" title="Editar Usuario" (click)="openEditarUsuarioModal(user)">
+              <i class="fa fa-edit"></i>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Activo/Inactivo </th>
+          <td mat-cell *matCellDef="let user" class="text-center">
+            <span class="badge" [ngClass]="user.activo === 1 ? 'bg-success' : 'bg-danger'">
+              {{user.activo === 1 ? 'Activo' : 'Inactivo'}}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="roles">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Asignar Roles </th>
+          <td mat-cell *matCellDef="let user" class="text-center">
+            <button class="btn btn-sm btn-info text-white" title="Asignar Roles">
+              <i class="fa fa-users-cog"></i>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="password">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Modificar Password </th>
+          <td mat-cell *matCellDef="let user" class="text-center">
+            <button class="btn btn-sm btn-warning text-dark" title="Modificar Password">
+              <i class="fa fa-key"></i>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #agregarUsuarioModal let-modal>
+  <div class="modal-content border-0">
+    <div class="modal-header bg-primary text-white">
+      <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user-plus me-2"></i>Agregar Usuario</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formAgregar">
+        <div class="row">
+          <div class="col-md-6 form-group mb-3">
+            <label for="nombre" class="fw-bold">Nombre</label>
+            <input maxlength="40" formControlName="nombre" autocomplete="off" class="form-control" type="text" required>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label for="usuario" class="fw-bold">Nombre de Usuario</label>
+            <input maxlength="40" formControlName="usuario" autocomplete="off" class="form-control" type="text" required>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label for="ap_paterno" class="fw-bold">Apellido Paterno</label>
+            <input maxlength="40" formControlName="ap_paterno" autocomplete="off" class="form-control" type="text" required>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label for="password" class="fw-bold">Contraseña</label>
+            <input minlength="8" formControlName="password" autocomplete="off" class="form-control" type="password" required>
+            <small class="text-muted">Debe contener mayúscula, minúscula y número (Mín. 8 caracteres).</small>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label for="ap_materno" class="fw-bold">Apellido Materno</label>
+            <input maxlength="40" formControlName="ap_materno" autocomplete="off" class="form-control" type="text" required>
+          </div>
+        </div>
+        
+        <hr>
+        <div class="modal-header bg-primary text-white">
+          <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()"></button>
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+          <button class="btn btn-secondary" type="button" (click)="cerrarModal()">Cancelar</button>
+          <button class="btn btn-success" type="button" (click)="guardarUsuario()" [disabled]="formAgregar.invalid">Guardar Usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editarUsuarioModal let-modal>
+  <div class="modal-content border-0">
+    <div class="modal-header bg-warning text-dark">
+      <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user-edit me-2"></i>Editar Usuario</h5>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formEditar">
+        
+        <input type="hidden" formControlName="idUsuario">
+
+        <div class="row">
+          <div class="col-md-6 form-group mb-3">
+            <label for="nombre_edita" class="fw-bold">Nombre</label>
+            <input maxlength="40" formControlName="nombre_edita" autocomplete="off" class="form-control" type="text" required>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label for="usuario_edita" class="fw-bold">Nombre de Usuario</label>
+            <input maxlength="40" formControlName="usuario_edita" autocomplete="off" class="form-control" type="text" required>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label for="ap_paterno_edita" class="fw-bold">Apellido Paterno</label>
+            <input maxlength="40" formControlName="ap_paterno_edita" autocomplete="off" class="form-control" type="text" required>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label for="ap_materno_edita" class="fw-bold">Apellido Materno</label>
+            <input maxlength="40" formControlName="ap_materno_edita" autocomplete="off" class="form-control" type="text" required>
+          </div>
+        </div>
+        
+        <hr>
+        <div class="d-flex justify-content-end gap-2">
+          <button class="btn btn-secondary" type="button" (click)="modal.dismiss('cancel')">Cancelar</button>
+          <button class="btn btn-warning" type="button" (click)="editarUsuario()">Actualizar Usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
