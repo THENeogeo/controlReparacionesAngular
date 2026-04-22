@@ -37,7 +37,7 @@ export class UsuariosComponent implements OnInit {
   private modalActualRef?: MatDialogRef<any>; 
 
   dataSource = new MatTableDataSource<Usuario>([]);
-  columnas = ['nombre', 'ap_paterno', 'ap_materno', 'username', 'editar', 'estado', 'roles', 'password'];
+  columnas = ['nombre', 'ap_paterno', 'ap_materno', 'username', 'estado', 'roles', 'password'];
 
   formAgregar!: FormGroup;
   formEditar!: FormGroup;
@@ -72,6 +72,13 @@ export class UsuariosComponent implements OnInit {
       next: (data) => this.dataSource.data = data,
       error: (err) => console.error('Error al cargar usuarios:', err)
     });
+  }
+
+  // --- LÓGICA DE BÚSQUEDA ---
+  aplicarFiltro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    // Esto hace que la tabla de Angular Material busque en todos los campos (nombre, usuario, etc.)
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   // --- MANEJO DE MODALES ---

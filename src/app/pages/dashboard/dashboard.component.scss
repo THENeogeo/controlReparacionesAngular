@@ -1,0 +1,16 @@
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f8f9fa; /* Color gris muy clarito de fondo */
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  background-color: white;
+}
+
+/* Forzamos el azul específico de tu imagen */
+.text-primary {
+  color: #3b5998 !important; 
+}

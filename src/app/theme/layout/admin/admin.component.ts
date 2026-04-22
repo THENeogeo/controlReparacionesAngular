@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router'; // <-- El ingrediente clave para los Layouts
+import { RouterOutlet, Router } from '@angular/router'; // <-- El ingrediente clave para los Layouts
 import { MatButtonModule } from '@angular/material/button'; // Para el botón de "Cerrar Sesión"
 
 @Component({
@@ -21,5 +21,14 @@ export class AdminComponent {
   // Más adelante, aquí agregaremos la lógica para:
   // 1. Ocultar/Mostrar el menú lateral en pantallas pequeñas.
   // 2. La función de Cerrar Sesión (borrar el token y redirigir al login).
+
+  private router = inject(Router); // Inyectamos el RouterOutlet para futuras necesidades de navegación
+
+  cerrarSesion() {
+    // Aquí iría la lógica para cerrar sesión, como borrar el token de autenticación
+    // y redirigir al usuario a la página de login.
+    console.log('Cerrando sesión...'); // Placeholder para la acción real
+    this.router.navigate(['/login']); // Redirige al login después de cerrar sesión
+  }
   
 }

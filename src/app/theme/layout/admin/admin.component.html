@@ -1,13 +1,16 @@
 <div class="admin-layout-container">
   <header class="bg-primary text-white p-3 shadow-sm d-flex justify-content-between">
     <h4 class="m-0">STE - Control de Reparaciones</h4>
-    <button mat-button class="text-white">Cerrar Sesión</button>
+    <button mat-button class="text-white" (click)="cerrarSesion()">
+      <i class="fa fa-sign-out-alt me-2"></i> Cerrar Sesión
+    </button>
   </header>
 
   <div class="d-flex">
     <aside style="width: 250px; min-height: 100vh; background: #343a40; color: white;" class="p-3">
-      <p>Menú Lateral</p>
+      <p>Menú</p>
       <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Dashboard</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="/usuarios">Usuarios</a></li>
       </ul>
     </aside>

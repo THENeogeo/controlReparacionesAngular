@@ -1,90 +1,106 @@
 <div class="card shadow mb-4 mt-4 mx-3">
-  <div class="card-header d-flex flex-row align-items-center justify-content-between bg-white py-3">
-    <h6 class="m-0 fw-bold text-primary">Administración de usuarios</h6>
-    <span class="text-muted small fw-bold">Administración / Usuarios</span>
+  
+  <div class="card-header d-flex flex-row align-items-center justify-content-between bg-light py-3 border-bottom-0">
+    <h5 class="m-0 fw-bold text-primary">Administración de usuarios</h5>
+    <span class="text-primary fw-bold fs-5">Administración / Usuarios</span>
   </div>
   
-  <div class="card-body">
-    <div class="mb-3">
-      <button type="button" class="btn btn-outline-success" (click)="openAgregarUsuarioModal()">
-        <span class="fa fa-user-plus me-2"></span>
-        Agregar Nuevo Usuario
+  <div class="card-body" style="background-color: #e5e5e5;">
+    
+    <div class="mb-4">
+      <button type="button" class="btn btn-outline-success bg-transparent border-success text-success bg-white px-3 py-2 fw-semibold" style="border-radius: 4px;" (click)="openAgregarUsuarioModal()">
+        <i class="fa fa-user-plus me-2"></i> Agregar Nuevo Usuario
       </button>
     </div>
 
-    <div class="alert alert-info rounded d-flex align-items-center mx-auto">
-      <div class="icon me-3">
-        <i class="fa fa-search fa-2x"></i>
-      </div>
+    <div class="alert rounded-0 mb-4 px-4 py-3 d-flex align-items-center" style="background-color: #8ce1f6; border: none; border-bottom: 2px solid #5ab0c5;">
       <div>
-        <h5 class="mb-0 fw-bold">Usuarios Registrados</h5>
-        <small><strong>Criterios de Búsqueda:</strong> Nombre, Apellidos, Username</small>
+        <h4 class="mb-1 text-dark">Usuarios Registrados</h4>
+        <p class="mb-0 text-dark">
+          <i class="fa fa-search me-1"></i> <strong>Criterios de Búsqueda:</strong> Nombre, Apellidos, UserName
+        </p>
       </div>
     </div>
 
-    <div class="table-responsive">
-      <table mat-table [dataSource]="dataSource" class="table table-bordered table-hover w-100 mb-0">
+    <div class="d-flex justify-content-between align-items-center mb-3 text-dark">
+      <div class="d-flex align-items-center gap-2">
+        <span>Mostrar</span>
+        <select class="form-select form-select-sm d-inline-block w-auto">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <span>Entradas</span>
+      </div>
+      
+      <div class="d-flex align-items-center gap-2">
+        <span>Buscar:</span>
+        <input type="text" class="form-control form-control-sm" style="width: 200px;" (keyup)="aplicarFiltro($event)" placeholder="...">
+      </div>
+    </div>
+
+    <div class="table-responsive bg-white">
+      <table mat-table [dataSource]="dataSource" class="table table-striped table-hover w-100 mb-0 align-middle">
         
         <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Nombre </th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom"> Nombre <i class="fa fa-sort ms-1 text-muted"></i></th>
           <td mat-cell *matCellDef="let user"> {{user.nombre}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ap_paterno">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Apellido Paterno </th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom"> Apellido Paterno <i class="fa fa-sort ms-1 text-muted"></i></th>
           <td mat-cell *matCellDef="let user"> {{user.ap_paterno}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ap_materno">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Apellido Materno </th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom"> Apellido Materno <i class="fa fa-sort ms-1 text-muted"></i></th>
           <td mat-cell *matCellDef="let user"> {{user.ap_materno}} </td>
         </ng-container>
 
         <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold"> Username </th>
-          <td mat-cell *matCellDef="let user"> <strong>&#64;{{user.username}}</strong> </td>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom"> Usuario <i class="fa fa-sort ms-1 text-muted"></i></th>
+          <td mat-cell *matCellDef="let user"> {{user.username}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="editar">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Editar </th>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Cambiar Activo/Inactivo <i class="fa fa-sort ms-1 text-muted"></i></th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button class="btn btn-sm btn-primary" title="Editar Usuario" (click)="openEditarUsuarioModal(user)">
-              <i class="fa fa-edit"></i>
+            <button *ngIf="user.activo === 1" class="btn btn-sm text-info border border-info bg-transparent fw-semibold px-3" style="min-width: 110px;">
+              <i class="fa fa-minus-circle me-1"></i> Desactivar
+            </button>
+            <button *ngIf="user.activo !== 1" class="btn btn-sm text-danger border border-danger bg-transparent fw-semibold px-3" style="min-width: 110px;">
+              <i class="fa fa-minus-circle me-1"></i> Activar
             </button>
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="estado">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Activo/Inactivo </th>
-          <td mat-cell *matCellDef="let user" class="text-center">
-            <span class="badge" [ngClass]="user.activo === 1 ? 'bg-success' : 'bg-danger'">
-              {{user.activo === 1 ? 'Activo' : 'Inactivo'}}
-            </span>
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="roles">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Asignar Roles </th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Asignar Roles <i class="fa fa-sort ms-1 text-muted"></i></th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button class="btn btn-sm btn-info text-white" title="Asignar Roles">
-              <i class="fa fa-users-cog"></i>
+            <button class="btn btn-sm text-warning border border-warning bg-transparent fw-semibold px-3">
+              <i class="fa fa-check-circle me-1"></i> Asignar Roles
             </button>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="password">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold text-center"> Modificar Password </th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Modificar Password <i class="fa fa-sort ms-1 text-muted"></i></th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button class="btn btn-sm btn-warning text-dark" title="Modificar Password">
-              <i class="fa fa-key"></i>
+            <button class="btn btn-sm text-primary border border-primary bg-transparent fw-semibold px-3">
+              <i class="fa fa-lock me-1"></i> Modificar Contraseña
             </button>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columnas"></tr>
         <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell text-center p-4 text-muted" colspan="7">No se encontraron usuarios que coincidan con la búsqueda.</td>
+        </tr>
       </table>
     </div>
+
   </div>
 </div>
 
