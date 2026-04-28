@@ -52,7 +52,7 @@ export class LoginComponent {
     }).subscribe({
       next: (res) => {
         this.snackBar.open('¡Bienvenido al sistema!', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/dashboard']); // O a la ruta que prefieras
+        this.router.navigate(['/dashboard']); // Ruta después de pasar el login
       },
       error: (err) => {
         this.loading.set(false);

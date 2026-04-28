@@ -4,14 +4,14 @@ import { AdminComponent } from './theme/layout/admin/admin.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
-export const routes: Routes = [
-  // RUTAS PÚBLICAS (No usan el cascarón de admin, ocupan toda la pantalla)
+export const routes: Routes = [ //Aquí defines todas las rutas de tu app. Es un arreglo de objetos donde cada objeto es una ruta.
+  // RUTAS PÚBLICAS | No usan el cascarón de admin, ocupan toda la pantalla
   { path: 'login', component: LoginComponent },
   
-  // RUTAS PROTEGIDAS (Van envueltas en el Layout Admin)
+  // RUTAS PROTEGIDAS | Van envueltas en el Layout Admin
   { 
     path: '', 
-    component: AdminComponent, // <-- Este componente dibujará el menú
+    component: AdminComponent, // Este componente dibujará el menú
     children: [
       // Todo lo que pongamos aquí aparecerá DENTRO del AdminComponent
       { path: 'dashboard', component: DashboardComponent },
@@ -20,6 +20,6 @@ export const routes: Routes = [
     ]
   },
   
-  // COMODÍN
+  // Redireccionamiento para rutas no encontradas
   { path: '**', redirectTo: 'login' }
 ];
