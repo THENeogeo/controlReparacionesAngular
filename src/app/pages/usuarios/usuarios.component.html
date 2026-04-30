@@ -63,30 +63,30 @@
         </ng-container>
 
         <ng-container matColumnDef="estado">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Cambiar Activo/Inactivo <i class="fa fa-sort ms-1 text-muted"></i></th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Cambiar Activo/Inactivo </th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button *ngIf="user.activo === 1" class="btn btn-sm text-info border border-info bg-transparent fw-semibold px-3" style="min-width: 110px;">
+            <button *ngIf="user.activo === 1" class="btn btn-sm text-info border border-info bg-transparent fw-semibold px-3" (click)="openModalEstatus(user)">
               <i class="fa fa-minus-circle me-1"></i> Desactivar
             </button>
-            <button *ngIf="user.activo !== 1" class="btn btn-sm text-danger border border-danger bg-transparent fw-semibold px-3" style="min-width: 110px;">
-              <i class="fa fa-minus-circle me-1"></i> Activar
+            <button *ngIf="user.activo !== 1" class="btn btn-sm text-danger border border-danger bg-transparent fw-semibold px-3" (click)="openModalEstatus(user)">
+              <i class="fa fa-check-circle me-1"></i> Activar
             </button>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="roles">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Asignar Roles <i class="fa fa-sort ms-1 text-muted"></i></th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Asignar Roles </th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button class="btn btn-sm text-warning border border-warning bg-transparent fw-semibold px-3">
-              <i class="fa fa-check-circle me-1"></i> Asignar Roles
+            <button class="btn btn-sm text-warning border border-warning bg-transparent fw-semibold px-3" (click)="openRoles(user)">
+              <i class="fa fa-users-cog me-1"></i> Asignar Roles
             </button>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="password">
-          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Modificar Password <i class="fa fa-sort ms-1 text-muted"></i></th>
+          <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Modificar Password </th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button class="btn btn-sm text-primary border border-primary bg-transparent fw-semibold px-3">
+            <button class="btn btn-sm text-primary border border-primary bg-transparent fw-semibold px-3" (click)="openModalPassword(user)">
               <i class="fa fa-lock me-1"></i> Modificar Contraseña
             </button>
           </td>
@@ -104,51 +104,87 @@
   </div>
 </div>
 
+<!-- Modal para Agregar Usuarios -->
 <ng-template #agregarUsuarioModal let-modal>
-  <div class="modal-content border-0">
-    <div class="modal-header bg-primary text-white">
-      <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user-plus me-2"></i>Agregar Usuario</h5>
-      <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+  <div class="modal-content border-0 shadow-lg" style="background-color: #f8f9fa;">
+    
+    <div class="modal-header bg-light border-bottom-0 pb-0">
+      <h5 class="modal-title fw-normal text-dark">Agregar Usuario</h5>
+      <button type="button" class="btn-close" (click)="cerrarModal()" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
+
+    <div class="modal-body px-4 pt-3 pb-4">
       <form [formGroup]="formAgregar">
-        <div class="row">
-          <div class="col-md-6 form-group mb-3">
-            <label for="nombre" class="fw-bold">Nombre</label>
-            <input maxlength="40" formControlName="nombre" autocomplete="off" class="form-control" type="text" required>
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label for="usuario" class="fw-bold">Nombre de Usuario</label>
-            <input maxlength="40" formControlName="usuario" autocomplete="off" class="form-control" type="text" required>
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label for="ap_paterno" class="fw-bold">Apellido Paterno</label>
-            <input maxlength="40" formControlName="ap_paterno" autocomplete="off" class="form-control" type="text" required>
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label for="password" class="fw-bold">Contraseña</label>
-            <input minlength="8" formControlName="password" autocomplete="off" class="form-control" type="password" required>
-            <small class="text-muted">Debe contener mayúscula, minúscula y número (Mín. 8 caracteres).</small>
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label for="ap_materno" class="fw-bold">Apellido Materno</label>
-            <input maxlength="40" formControlName="ap_materno" autocomplete="off" class="form-control" type="text" required>
-          </div>
-        </div>
         
-        <hr>
-        <div class="modal-header bg-primary text-white">
-          <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()"></button>
+        <!-- <div class="form-group mb-3">
+          <label class="form-label small text-dark mb-1">Número de Expediente</label>
+          <div class="input-group">
+            <input type="number" formControlName="expediente" class="form-control bg-light" placeholder="Buscar por expediente">
+            <button class="btn btn-outline-info bg-light text-info border-start-0" type="button" (click)="buscarExpediente()" style="border-color: #ced4da;">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div> -->
+
+        <!-- <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" formControlName="isAdmin" id="adminCheck">
+          <label class="form-check-label small" for="adminCheck">¿Será Administrador?</label>
+        </div> -->
+
+        <div class="form-group mb-3">
+          <label class="form-label small mb-1">Nombre</label>
+          <input formControlName="nombre" class="form-control" type="text" [ngClass]="{'is-invalid': formAgregar.get('nombre')?.invalid && formAgregar.get('nombre')?.touched}">
+          <div class="invalid-feedback">El nombre es requerido.</div>
         </div>
-        <div class="d-flex justify-content-end gap-2">
-          <button class="btn btn-secondary" type="button" (click)="cerrarModal()">Cancelar</button>
-          <button class="btn btn-success" type="button" (click)="guardarUsuario()" [disabled]="formAgregar.invalid">Guardar Usuario</button>
+
+        <div class="form-group mb-3">
+          <label class="form-label small mb-1">Apellido Paterno</label>
+          <input formControlName="ap_paterno" class="form-control" type="text" [ngClass]="{'is-invalid': formAgregar.get('ap_paterno')?.invalid && formAgregar.get('ap_paterno')?.touched}">
+          <div class="invalid-feedback">El apellido paterno es requerido.</div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="form-label small mb-1">Apellido Materno</label>
+          <input formControlName="ap_materno" class="form-control" type="text" [ngClass]="{'is-invalid': formAgregar.get('ap_materno')?.invalid && formAgregar.get('ap_materno')?.touched}">
+          <div class="invalid-feedback">El apellido materno es requerido.</div>
+        </div>
+
+        <!-- <div class="form-group mb-3">
+          <label class="form-label small mb-1">Perfil</label>
+          <select formControlName="perfil" class="form-select" [ngClass]="{'is-invalid': formAgregar.get('perfil')?.invalid && formAgregar.get('perfil')?.touched}">
+            <option value="" disabled selected>Seleccione un perfil...</option>
+            <option value="usuario">Usuario Estándar</option>
+            <option value="tecnico">Técnico</option>
+          </select>
+          <div class="invalid-feedback">Debe seleccionar un perfil.</div>
+        </div> -->
+
+        <div class="form-group mb-3">
+          <label class="form-label small mb-1">Nombre de Usuario</label>
+          <input formControlName="usuario" class="form-control" type="text" [ngClass]="{'is-invalid': formAgregar.get('usuario')?.invalid && formAgregar.get('usuario')?.touched}">
+          <div class="invalid-feedback">El nombre de usuario es requerido (1-30 caracteres).</div>
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="form-label small mb-1">Contraseña</label>
+          <input formControlName="password" class="form-control" type="password" [ngClass]="{'is-invalid': formAgregar.get('password')?.invalid && formAgregar.get('password')?.touched}">
+          <div class="invalid-feedback">Contraseña: 8 Caracteres mínimo, Mayúsculas, Minúsculas y Números.</div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn text-white px-4 py-2" style="background-color: #8d8d8d; border-radius: 4px;" type="button" (click)="cerrarModal()">Cancelar</button>
+          
+          <button class="btn text-white px-4 py-2" style="background-color: #55e6c1; border-radius: 4px;" type="button" 
+                  (click)="formAgregar.invalid ? formAgregar.markAllAsTouched() : guardarUsuario()">
+            Guardar
+          </button>
         </div>
       </form>
     </div>
   </div>
 </ng-template>
 
+<!-- Modal para Editar Usuarios -->
 <ng-template #editarUsuarioModal let-modal>
   <div class="modal-content border-0">
     <div class="modal-header bg-warning text-dark">
@@ -185,6 +221,85 @@
           <button class="btn btn-warning" type="button" (click)="editarUsuario()">Actualizar Usuario</button>
         </div>
       </form>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- Modal para Cambiar Estatus (Activo/Inactivo) -->
+<ng-template #estatusModal>
+  <div class="modal-content border-0 shadow-lg">
+    <div class="modal-header bg-light border-bottom-0">
+      <h5 class="modal-title text-dark fw-bold">Confirmar Acción</h5>
+      <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+    </div>
+    <div class="modal-body px-4 py-4 text-center">
+      <i class="fa fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+      <p class="fs-5 mb-0">¿Estás seguro de que deseas <strong>{{estadoSeleccionado === 1 ? 'activar' : 'desactivar'}}</strong> este usuario?</p>
+      
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <button class="btn btn-secondary px-4 py-2" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn px-4 py-2 text-white" [ngClass]="estadoSeleccionado === 1 ? 'btn-success' : 'btn-danger'" (click)="cambiarEstatus()">
+          Sí, Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Modal para modificar roles -->
+<ng-template #rolesModal>
+  <div class="modal-content border-0 shadow-lg">
+    <div class="modal-header bg-warning border-bottom-0">
+      <h5 class="modal-title text-dark fw-bold"><i class="fa fa-users-cog me-2"></i>Administrar Roles</h5>
+      <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+    </div>
+    <div class="modal-body px-4 py-3">
+      <p class="text-muted mb-4 small">Activa o desactiva los permisos de este usuario en el sistema.</p>
+      
+      <div class="list-group">
+        <div *ngFor="let rol of rolesDisponibles" class="list-group-item d-flex justify-content-between align-items-center bg-light border-0 mb-2 rounded shadow-sm">
+          <span class="fw-semibold text-dark">{{ rol.rolName }}</span>
+          
+          <button *ngIf="!tieneRol(rol.id)" class="btn btn-sm btn-outline-success px-3" (click)="asignarRol(rol.id)">
+            <i class="fa fa-plus me-1"></i> Agregar
+          </button>
+          <button *ngIf="tieneRol(rol.id)" class="btn btn-sm btn-danger px-3 text-white" (click)="desactivarRol(rol.id)">
+            <i class="fa fa-trash me-1"></i> Remover
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer border-0 bg-light">
+      <button class="btn btn-secondary px-4" (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- Modal para modificarar password -->
+<ng-template #passwordModal>
+  <div class="modal-content border-0 shadow-lg">
+    <div class="modal-header bg-primary border-bottom-0">
+      <h5 class="modal-title text-white fw-bold"><i class="fa fa-lock me-2"></i>Actualizar Contraseña</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()"></button>
+    </div>
+    <div class="modal-body px-4 py-4">
+      
+      <form [formGroup]="formContrasena" (ngSubmit)="cambiarPassword()">
+        <div class="form-group mb-4">
+          <label class="form-label small mb-1 fw-bold text-dark">Escribe la Nueva Contraseña</label>
+          <input formControlName="password_update" class="form-control bg-light" type="password" [ngClass]="{'is-invalid': formContrasena.get('password_update')?.invalid && formContrasena.get('password_update')?.touched}">
+          <div class="invalid-feedback">Debe contener mayúscula, minúscula y número (Mín. 8 caracteres).</div>
+        </div>
+        
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button class="btn btn-secondary px-4 py-2" type="button" (click)="cerrarModal()">Cancelar</button>
+          <button class="btn btn-primary px-4 py-2 text-white" type="submit">Guardar Cambios</button>
+        </div>
+      </form>
+
     </div>
   </div>
 </ng-template>
