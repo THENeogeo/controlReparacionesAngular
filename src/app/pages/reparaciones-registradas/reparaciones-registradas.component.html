@@ -1,12 +1,20 @@
 <div class="card shadow mb-4 mt-4 mx-3">
   <!-- Encabezado -->
-  <div class="card-header d-flex flex-row align-items-center justify-content-between bg-light py-3 border-bottom-0">
-    <h5 class="m-0 fw-bold text-primary">Administración de reparaciones</h5>
-    <span class="text-primary fw-bold fs-5">Administración / Reparaciones</span>
+  <div
+    class="card-header d-flex flex-row align-items-center justify-content-between bg-light py-3 border-bottom-0">
+    <h5 class="m-0 fw-bold text-primary">
+      Administración de reparaciones
+    </h5>
+    <span class="text-primary fw-bold fs-5">
+      Administración / Reparaciones
+    </span>
   </div>
+
   <!-- Cuerpo -->
-  <div class="card-body" style="background-color: #e5e5e5;">
-    <!-- Botón -->
+  <div
+    class="card-body"
+    style="background-color: #e5e5e5;">
+    <!-- Botón para registrar -->
     <div class="mb-4">
       <button
         type="button"
@@ -16,90 +24,312 @@
         Registrar Nueva Reparación
       </button>
     </div>
+
     <!-- Información -->
-    <div class="alert rounded-0 mb-4 px-4 py-3 d-flex align-items-center"
-         style="background-color: #8ce1f6; border:none; border-bottom:2px solid #5ab0c5;">
+    <div
+      class="alert rounded-0 mb-4 px-4 py-3 d-flex align-items-center"
+      style="
+        background-color: #8ce1f6;
+        border: none;
+        border-bottom: 2px solid #5ab0c5;
+      ">
       <div>
-        <h4 class="mb-1 text-dark">Reparaciones Registradas</h4>
+        <h4 class="mb-1 text-dark">
+          Reparaciones Registradas
+        </h4>
         <p class="mb-0 text-dark">
           <i class="fa fa-search me-1"></i>
-          <strong>Criterios de Búsqueda:</strong>
+          <strong>
+            Criterios de Búsqueda:
+          </strong>
           Folio, Cliente, Equipo, Estado
         </p>
       </div>
     </div>
+
     <!-- Barra superior -->
-    <div class="d-flex justify-content-between align-items-center mb-3 text-dark">
+    <div
+      class="d-flex justify-content-between align-items-center mb-3 text-dark">
+      <!-- Cantidad de registros -->
       <div class="d-flex align-items-center gap-2">
-        <span>Mostrar</span>
-        <select class="form-select form-select-sm d-inline-block w-auto">
-          <option>10</option>
-          <option>25</option>
-          <option>50</option>
+        <span>
+          Mostrar
+        </span>
+        <select
+          class="form-select form-select-sm d-inline-block w-auto">
+          <option value="10">
+            10
+          </option>
+          <option value="25">
+            25
+          </option>
+          <option value="50">
+            50
+          </option>
         </select>
-        <span>Entradas</span>
+        <span>
+          Entradas
+        </span>
+
       </div>
+      <!-- Buscador -->
       <div class="d-flex align-items-center gap-2">
-        <span>Buscar:</span>
+        <span>
+          Buscar:
+        </span>
         <input
           type="text"
           class="form-control form-control-sm"
-          style="width:200px;"
+          style="width: 200px;"
           placeholder="...">
       </div>
     </div>
+
     <!-- Tabla -->
     <div class="table-responsive bg-white">
-      <table class="table table-striped table-hover align-middle mb-0">
+      <table
+        class="table table-striped table-hover align-middle mb-0">
+        <!-- Encabezados -->
         <thead class="table-light">
           <tr>
-            <th>Folio</th>
-            <th>Equipo</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Inventario</th>
-            <th>Refaccion</th>
-            <th>Tipo Refaccion</th>
-            <th>Descripción</th>
-            <th>Expediente</th>
-            <th>Nombre</th>
-            <th>Area</th>
-            <th>Fecha de Reparacion</th>
-
-            <th class="text-center">Acciones</th>
+            <th
+              style="width: 100px;"
+              class="text-center">
+              Folio
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Equipo
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Marca
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Modelo
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Inventario
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Refacción
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Tipo Refacción
+            </th>
+            <th
+              style="width: 200px;"
+              class="text-center">
+              Descripción
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Expediente
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Área
+            </th>
+            <th
+              style="width: 150px;"
+              class="text-center">
+              Fecha de Reparación
+            </th>
+            <th class="text-center">
+              Acciones
+            </th>
           </tr>
         </thead>
+
+        <!-- Registros -->
         <tbody>
-          <tr *ngFor="let reparacion of reparaciones">
-            <td>{{ reparacion.id }}</td>
-            <td>{{ reparacion.equipo }}</td>
-            <td>{{ reparacion.marca }}</td>
-            <td>{{ reparacion.modelo }}</td>
-            <td>{{ reparacion.inventario }}</td>
-            <td>{{ reparacion.refaccion }}</td>
-            <td>{{ reparacion.tipoRefaccion }}</td>
-            <td>{{ reparacion.descripcion }}</td>
-            <td>{{ reparacion.expediente }}</td>
-            <td>{{ reparacion.nombre }}</td>
-            <td>{{ reparacion.area }}</td>
-            <td>{{ reparacion.fechaReparacion }}</td>
+          <tr
+            *ngFor="let reparacion of reparaciones">
+            <!-- Folio -->
             <td class="text-center">
-              <button class="btn btn-sm btn-outline-info me-2">
-                <i class="fa fa-eye me-1"></i>
-                Ver
-              </button>
-              <button class="btn btn-sm btn-outline-warning me-2">
-                <i class="fa fa-edit me-1"></i>
+              {{
+                generarFolio(
+                  reparacion.idReparacion
+                )
+              }}
+            </td>
+            <!-- Equipo -->
+            <td class="text-center">
+              {{ reparacion.tipoEquipo }}
+            </td>
+            <!-- Marca -->
+            <td class="text-center">
+              {{ reparacion.marca }}
+            </td>
+            <!-- Modelo -->
+            <td class="text-center">
+              {{ reparacion.modelo }}
+            </td>
+            <!-- Inventario -->
+            <td class="text-center">
+              {{ reparacion.inventario }}
+            </td>
+            <!-- Refacción -->
+            <td class="text-center">
+              {{ reparacion.refaccion }}
+            </td>
+            <!-- Tipo de refacción -->
+            <td class="text-center">
+              {{ reparacion.tipoRefaccion }}
+            </td>
+            <!-- Descripción -->
+            <td class="text-center">
+              {{ reparacion.descripcionReporte }}
+            </td>
+            <!-- Expediente -->
+            <td class="text-center">
+              {{ reparacion.expediente }}
+            </td>
+            <!-- Área -->
+            <td class="text-center">
+              {{ reparacion.area }}
+            </td>
+            <!-- Fecha -->
+            <td class="text-center">
+              {{
+                formatearFecha(
+                  reparacion.fechaRegistro
+                )
+              }}
+            </td>
+            <!-- Acciones -->
+            <td class="text-center">
+              <!-- Editar -->
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-warning me-2">
+                <i class="fa fa-edit me-2"></i>
                 Editar
               </button>
-              <button class="btn btn-sm btn-outline-danger">
-                <i class="fa fa-trash me-1"></i>
+
+              <!-- Eliminar -->
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="seleccionarReparacion(reparacion)"> <i class="fa fa-trash me-2"></i>
                 Eliminar
               </button>
+            </td>
+          </tr>
+
+          <!-- Mensaje cuando no hay registros -->
+          <tr *ngIf="reparaciones.length === 0">
+            <td
+              colspan="12"
+              class="text-center py-4 text-muted">
+              No existen reparaciones registradas.
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
+    <!-- Fin de tabla -->
+
+    <!-- Modal de confirmación de eliminación -->
+    <div *ngIf="mostrarModalEliminar" class="modal-backdrop fade show"></div> 
+      <div
+        class="modal fade"
+        [class.show]="mostrarModalEliminar" 
+        [style.display]="mostrarModalEliminar ? 'block' : 'none'" 
+        id="modalEliminar"
+        tabindex="-1"
+        aria-labelledby="modalEliminarLabel"
+        aria-hidden="true">
+        <div
+          class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5
+                class="modal-title"
+                id="modalEliminarLabel">
+                ADVERTENCIA: Confirmación de Eliminación
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                aria-label="Cerrar"
+                (click)="limpiarReparacionSeleccionada()"> </button>
+            </div>
+            <div class="modal-body">
+              <p class="mb-3">
+                ¿Estás seguro de que deseas eliminar
+                esta reparación?
+              </p>
+              <div
+                *ngIf="reparacionSeleccionada"
+                class="border rounded p-3 bg-light">
+                <div class="mb-2">
+                  <strong>
+                    Folio:
+                  </strong>
+                  {{
+                    generarFolio(
+                      reparacionSeleccionada.idReparacion
+                    )
+                  }}
+                </div>
+                <div class="mb-2">
+                  <strong>
+                    Equipo:
+                  </strong>
+                  {{
+                    reparacionSeleccionada.tipoEquipo
+                  }}
+                </div>
+                <div class="mb-2">
+                  <strong>
+                    Marca:
+                  </strong>
+                  {{
+                    reparacionSeleccionada.marca
+                  }}
+                </div>
+                <div>
+                  <strong>
+                    Modelo:
+                  </strong>
+                  {{
+                    reparacionSeleccionada.modelo
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="limpiarReparacionSeleccionada()"> Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="eliminarReparacion()"
+                [disabled]="!reparacionSeleccionada">
+                <i class="fa fa-trash me-2"></i>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fin del modal -->
+    </div>
+    <!-- Fin del cuerpo -->
 </div>
