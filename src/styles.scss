@@ -2,3 +2,14 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Sobrescribe el diseño base de los modales de Bootstrap para hacerlos cuadrados */
+.modal-content {
+  border-radius: 0 !important;
+}
+
+/* Para asegurar que ni los encabezados ni los pies del modal mantengan curvas */
+.modal-header, 
+.modal-footer {
+  border-radius: 0 !important;
+}

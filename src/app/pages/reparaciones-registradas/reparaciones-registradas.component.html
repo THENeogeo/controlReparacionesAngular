@@ -18,10 +18,10 @@
     <div class="mb-4">
       <button
         type="button"
-        class="btn btn-outline-success bg-transparent border-success text-success bg-white px-3 py-2 fw-semibold"
+        class="btn btn-outline-success px-3 py-2 fw-semibold"
         style="border-radius: 4px;">
         <i class="fa fa-plus me-2"></i>
-        Registrar Nueva Reparación
+        Registrar nueva reparación
       </button>
     </div>
 
@@ -35,12 +35,12 @@
       ">
       <div>
         <h4 class="mb-1 text-dark">
-          Reparaciones Registradas
+          Reparaciones registradas
         </h4>
         <p class="mb-0 text-dark">
           <i class="fa fa-search me-1"></i>
           <strong>
-            Criterios de Búsqueda:
+            Criterios de búsqueda:
           </strong>
           Folio, Cliente, Equipo, Estado
         </p>
@@ -210,23 +210,29 @@
               }}
             </td>
             <!-- Acciones -->
-            <td class="text-center">
+            <td class="text-center justify-content-center">
               <!-- Editar -->
               <button
                 type="button"
-                class="btn btn-sm btn-outline-warning me-2">
-                <i class="fa fa-edit me-2"></i>
-                Editar
+                class="btn btn-sm btn-warning me-2 text-dark"
+                title="Editar"
+                aria-label="Editar"
+                (click)="abrirModalEditar(reparacion.idReparacion)">
+                <!-- <i class="fa fa-edit"></i> -->
+                <i class="fa fa-pencil"></i>
               </button>
-
               <!-- Eliminar -->
               <button
                 type="button"
-                class="btn btn-sm btn-outline-danger"
-                (click)="seleccionarReparacion(reparacion)"> <i class="fa fa-trash me-2"></i>
-                Eliminar
+                class="btn btn-sm btn-danger text-white"
+                title="Eliminar"
+                aria-label="Eliminar"
+                (click)="seleccionarReparacion(reparacion)"> 
+                <!-- <i class="fa fa-trash"></i> -->
+                 <i class="fa fa-trash"></i>  
               </button>
             </td>
+            
           </tr>
 
           <!-- Mensaje cuando no hay registros -->
@@ -244,7 +250,7 @@
 
     <!-- Modal de confirmación de eliminación -->
     <div *ngIf="mostrarModalEliminar" class="modal-backdrop fade show"></div> 
-      <div
+    <div
         class="modal fade"
         [class.show]="mostrarModalEliminar" 
         [style.display]="mostrarModalEliminar ? 'block' : 'none'" 
@@ -252,84 +258,198 @@
         tabindex="-1"
         aria-labelledby="modalEliminarLabel"
         aria-hidden="true">
-        <div
-          class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5
-                class="modal-title"
-                id="modalEliminarLabel">
-                ADVERTENCIA: Confirmación de Eliminación
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                aria-label="Cerrar"
-                (click)="limpiarReparacionSeleccionada()"> </button>
-            </div>
-            <div class="modal-body">
-              <p class="mb-3">
-                ¿Estás seguro de que deseas eliminar
-                esta reparación?
-              </p>
-              <div
-                *ngIf="reparacionSeleccionada"
-                class="border rounded p-3 bg-light">
-                <div class="mb-2">
-                  <strong>
-                    Folio:
-                  </strong>
-                  {{
-                    generarFolio(
-                      reparacionSeleccionada.idReparacion
-                    )
-                  }}
-                </div>
-                <div class="mb-2">
-                  <strong>
-                    Equipo:
-                  </strong>
-                  {{
-                    reparacionSeleccionada.tipoEquipo
-                  }}
-                </div>
-                <div class="mb-2">
-                  <strong>
-                    Marca:
-                  </strong>
-                  {{
-                    reparacionSeleccionada.marca
-                  }}
-                </div>
-                <div>
-                  <strong>
-                    Modelo:
-                  </strong>
-                  {{
-                    reparacionSeleccionada.modelo
-                  }}
-                </div>
+      <div
+        class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-dark">
+            <h5
+              class="modal-title"
+              id="modalEliminarLabel">
+              ADVERTENCIA: Confirmación de eliminación
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Cerrar"
+              (click)="limpiarReparacionSeleccionada()"> </button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-3">
+              ¿Estás seguro de que deseas eliminar esta reparación?
+            </p>
+            <div
+              *ngIf="reparacionSeleccionada"
+              class="border rounded p-3 bg-light">
+              <div class="mb-2">
+                <strong>
+                  Folio:
+                </strong>
+                {{
+                  generarFolio(
+                    reparacionSeleccionada.idReparacion
+                  )
+                }}
               </div>
+              <!-- <div class="mb-2">
+                <strong>
+                  Equipo:
+                </strong>
+                {{
+                  reparacionSeleccionada.tipoEquipo
+                }}
+              </div>
+              <div class="mb-2">
+                <strong>
+                  Marca:
+                </strong>
+                {{
+                  reparacionSeleccionada.marca
+                }}
+              </div> -->
+              <!-- <div>
+                <strong>
+                  Modelo:
+                </strong>
+                {{
+                  reparacionSeleccionada.modelo
+                }}
+              </div> -->
             </div>
-            <div class="modal-footer">
-              <button
+          </div>
+          <div class="modal-footer">
+            <button
                 type="button"
                 class="btn btn-secondary"
                 (click)="limpiarReparacionSeleccionada()"> Cancelar
-              </button>
-              <button
+            </button>
+            <button
                 type="button"
                 class="btn btn-danger"
                 (click)="eliminarReparacion()"
                 [disabled]="!reparacionSeleccionada">
-                <i class="fa fa-trash me-2"></i>
-                Eliminar
-              </button>
-            </div>
+              <i class="fa fa-trash me-2"></i>
+              Eliminar
+            </button>
           </div>
         </div>
       </div>
-      <!-- Fin del modal -->
     </div>
-    <!-- Fin del cuerpo -->
+    <!-- Fin del modal -->
+
+    <!-- Modal de edición -->
+    <div *ngIf="mostrarModalEditar" class="modal-backdrop fade show"></div>
+    <div
+      class="modal fade"
+      [class.show]="mostrarModalEditar"
+      [style.display]="mostrarModalEditar ? 'block' : 'none'"
+      tabindex="-1"
+      aria-labelledby="modalEditarLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalEditarLabel">Editar reparación</h5>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Cerrar"
+              (click)="cerrarModalEditar()">
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <p class="mb-3">
+              <strong>Folio:</strong>
+              {{ generarFolio(reparacionEditar?.idReparacion) }}
+            </p>
+
+            <form *ngIf="reparacionEditar">
+              <div class="mb-3">
+                <label class="form-label">Inventario del equipo</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="reparacionEditar.inventario"
+                  name="inventario">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Inventario de refacción</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="reparacionEditar.refaccionInventario"
+                  name="refaccionInventario">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Número de expediente</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="reparacionEditar.expediente"
+                  name="expediente">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Descripción de la reparación</label>
+                <textarea
+                  rows="4"
+                  class="form-control"
+                  [(ngModel)]="reparacionEditar.descripcionReporte"
+                  name="descripcionReporte">
+                </textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">
+                    Descripción
+                </label>
+                <textarea
+                    rows="4"
+                    class="form-control"
+                    [(ngModel)]="reparacionEditar.descripcionReporte"
+                    name="descripcionReporte">
+                </textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">
+                    Fecha
+                </label>
+                <input
+                    type="date"
+                    class="form-control"
+                    [(ngModel)]="reparacionEditar.fechaRegistro"
+                    name="fechaRegistro">
+              </div>
+
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="cerrarModalEditar()">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="actualizarReparacion()"
+              [disabled]="!reparacionEditar">
+              <i class="fa fa-save me-2"></i>
+              Guardar
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- Fin del modal de edición -->
+    
+  </div>
+  <!-- Fin del cuerpo -->
 </div>

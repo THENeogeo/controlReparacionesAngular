@@ -5,6 +5,31 @@
   align-items: center;
   height: 100vh;
   background-color: #f0f2f5; /* Un gris muy claro de fondo */
+  /* Mantén los estilos que ya tengas aquí (como display: flex, align-items: center, etc.) */
+  min-height: 100vh; 
+  width: 100%;
+
+  /* Definimos un gradiente con varios tonos de azul (incluyendo el de tu tabla) */
+  background: linear-gradient(-45deg, #0d47a1, #1976d2, #8ce1f6, #42a5f5);
+  
+  /* Hacemos el fondo mucho más grande que la pantalla para poder moverlo */
+  background-size: 400% 400%;
+  
+  /* Aplicamos la animación infinita */
+  animation: moverGradiente 12s ease infinite;
+}
+
+/* Definimos el movimiento del fondo */
+@keyframes moverGradiente {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* La tarjeta principal: flexbox divide la pantalla en dos columnas */
@@ -29,13 +54,27 @@
 }
 
 .welcome-text-container {
-  text-align: center;
+  /* text-align: center; */
+  display: flex;
+  flex-direction: column; /* Apila los elementos verticalmente */
+  align-items: center;    /* Centra los elementos horizontalmente */
+  justify-content: center;/* Centra los elementos verticalmente */
+  gap: 30px;              /* Espacio de separación entre el texto y el logo */
+  height: 100%;
 }
 
 .welcome-heading {
   font-size: 3rem;
   font-weight: 700;
-  margin: 0;
+  margin-bottom: 0;
+}
+
+/* Estilos para controlar el tamaño de tu logo */
+.welcome-logo {
+  max-width: 70%; /* Evita que la imagen se salga del contenedor si es muy grande */
+  width: 250px;   /* Puedes ajustar este valor según qué tan grande quieras que se vea */
+  height: auto;
+  object-fit: contain;
 }
 
 /* Panel Derecho: Gris claro con el formulario */
@@ -114,4 +153,15 @@
   font-size: 0.9rem;
   color: #6c757d;
   margin-top: 3rem;
+}
+
+/* Opcional: Agrega una transición suave para que el cambio de color no sea tan brusco */
+.login-button {
+  transition: background-color 0.3s ease;
+}
+
+/* Aplica el verde en el hover, solo si el botón NO está deshabilitado */
+.login-button:hover:not([disabled]) {
+  background-color: #28a745 !important; /* Código hexadecimal para un verde de confirmación/éxito */
+  color: white !important; /* Asegura que el texto siga siendo blanco y legible */
 }

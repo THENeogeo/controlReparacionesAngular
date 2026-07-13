@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reparaciones-registradas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './reparaciones-registradas.component.html',
   styleUrl: './reparaciones-registradas.component.scss'
 })
@@ -17,8 +18,14 @@ export class ReparacionesRegistradasComponent implements OnInit {
   // Reparación seleccionada para eliminar
   reparacionSeleccionada: any = null;
 
-  // NUEVO: Variable para controlar la visibilidad del modal
+  // Variable para controlar la visibilidad del modal
   mostrarModalEliminar: boolean = false; 
+
+  // Reparación seleccionada para editar
+  reparacionEditar: any = null;
+
+  // Controla la visibilidad del modal de edición
+  mostrarModalEditar: boolean = false;
 
   constructor(
     private crudService: CrudService
@@ -54,7 +61,7 @@ export class ReparacionesRegistradasComponent implements OnInit {
       });
   }
 
-  // Guarda la reparación seleccionada y MUESTRA el modal
+  // Guarda la reparación seleccionada y muestra el modal
   seleccionarReparacion(reparacion: any): void {
     this.reparacionSeleccionada = reparacion;
     this.mostrarModalEliminar = true; // Abre el modal
@@ -65,14 +72,13 @@ export class ReparacionesRegistradasComponent implements OnInit {
     );
   }
 
-  // Limpia la reparación seleccionada y OCULTA el modal
+  // Limpia la reparación seleccionada y oculta el modal
   limpiarReparacionSeleccionada(): void {
     this.reparacionSeleccionada = null;
     this.mostrarModalEliminar = false; // Cierra el modal
   }
 
-  // Elimina una reparación por su ID
-  // y actualiza la lista de reparaciones
+  // Elimina una reparación por su ID y actualiza la lista de reparaciones
   eliminarReparacion(): void {
 
     if (!this.reparacionSeleccionada) {
@@ -82,8 +88,7 @@ export class ReparacionesRegistradasComponent implements OnInit {
       return;
     }
 
-    const id =
-      this.reparacionSeleccionada.idReparacion;
+    const id = this.reparacionSeleccionada.idReparacion;
 
     this.crudService
       .delete(
@@ -111,8 +116,7 @@ export class ReparacionesRegistradasComponent implements OnInit {
       });
   }
 
-  // Formatea la fecha que se muestra en el frontend
-  // Ejemplo: 2026-07-08 -> 08-07-2026
+  // Formatea la fecha que se muestra en el frontend | Ejemplo: 2026-07-08 -> 08-07-2026
   formatearFecha(fecha: string): string {
 
     if (!fecha) {
@@ -128,9 +132,40 @@ export class ReparacionesRegistradasComponent implements OnInit {
     return `${dia}-${mes}-${anio}`;
   }
 
-  // Genera el número de folio
-  // Se muestra únicamente en el frontend
+  // Genera el número de folio | Se muestra únicamente en el frontend
   generarFolio(id: number): string {
     return `STE-REP-GTI-${id}`;
   }
+
+  // Abre el modal de edición y obtiene los datos de la reparación seleccionada
+  abrirModalEditar(id: any): void {
+
+    // Obtiene la reparación para editar desde el backend
+    this.crudService
+      .get(`registro-reparacion/obtenerRegistroReparacionParaEditar/${id}`)
+      .subscribe({
+        next: (response: any) => {
+          console.log('Reparación para editar:',response);
+
+          this.reparacionEditar = response; // Guarda la reparación obtenida para editar
+          this.mostrarModalEditar = true; // Mostrar el modal de edición
+
+        },
+        error: (error) => {
+          console.error(
+            'Error al obtener la reparación para editar:',
+            error
+          );
+        }
+      });
+  }
+
+  actualizarReparacion(): void {
+  }
+
+  cerrarModalEditar(): void {
+    this.reparacionEditar = null;
+    this.mostrarModalEditar = false;
+  }
+
 }

@@ -8,14 +8,17 @@
   <div class="card-body" style="background-color: #e5e5e5;">
     
     <div class="mb-4">
-      <button type="button" class="btn btn-outline-success bg-transparent border-success text-success bg-white px-3 py-2 fw-semibold" style="border-radius: 4px;" (click)="openAgregarUsuarioModal()">
-        <i class="fa fa-user-plus me-2"></i> Agregar Nuevo Usuario
+      <button type="button" 
+      class="btn btn-outline-success px-3 py-2 fw-semibold" 
+      style="border-radius: 4px;" 
+      (click)="openAgregarUsuarioModal()">
+      <i class="fa fa-user-plus me-2"></i> Agregar nuevo usuario
       </button>
     </div>
 
     <div class="alert rounded-0 mb-4 px-4 py-3 d-flex align-items-center" style="background-color: #8ce1f6; border: none; border-bottom: 2px solid #5ab0c5;">
       <div>
-        <h4 class="mb-1 text-dark">Usuarios Registrados</h4>
+        <h4 class="mb-1 text-dark">Usuarios registrados</h4>
         <p class="mb-0 text-dark">
           <i class="fa fa-search me-1"></i> <strong>Criterios de Búsqueda:</strong> Nombre, Apellidos, UserName
         </p>
@@ -65,30 +68,37 @@
         <ng-container matColumnDef="estado">
           <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Cambiar Activo/Inactivo </th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button *ngIf="user.activo === 1" class="btn btn-sm text-info border border-info bg-transparent fw-semibold px-3" (click)="openModalEstatus(user)">
+            
+            <button *ngIf="user.activo === 1" class="btn btn-sm btn-danger text-white fw-semibold px-3" (click)="openModalEstatus(user)">
               <i class="fa fa-minus-circle me-1"></i> Desactivar
             </button>
-            <button *ngIf="user.activo !== 1" class="btn btn-sm text-danger border border-danger bg-transparent fw-semibold px-3" (click)="openModalEstatus(user)">
+            
+            <button *ngIf="user.activo !== 1" class="btn btn-sm btn-success text-white fw-semibold px-3" (click)="openModalEstatus(user)">
               <i class="fa fa-check-circle me-1"></i> Activar
             </button>
+            
           </td>
         </ng-container>
 
         <ng-container matColumnDef="roles">
           <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Asignar Roles </th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button class="btn btn-sm text-warning border border-warning bg-transparent fw-semibold px-3" (click)="openRoles(user)">
-              <i class="fa fa-users-cog me-1"></i> Asignar Roles
+            
+            <button class="btn btn-sm btn-warning text-dark fw-semibold px-3" (click)="openRoles(user)">
+              <i class="fa fa-users-cog me-1"></i> Asignar roles
             </button>
+            
           </td>
         </ng-container>
 
         <ng-container matColumnDef="password">
           <th mat-header-cell *matHeaderCellDef class="bg-light text-dark fw-bold border-bottom text-center"> Modificar Password </th>
           <td mat-cell *matCellDef="let user" class="text-center">
-            <button class="btn btn-sm text-primary border border-primary bg-transparent fw-semibold px-3" (click)="openModalPassword(user)">
-              <i class="fa fa-lock me-1"></i> Modificar Contraseña
+            
+            <button class="btn btn-sm btn-primary text-white fw-semibold px-3" (click)="openModalPassword(user)">
+              <i class="fa fa-lock me-1"></i> Modificar contraseña
             </button>
+            
           </td>
         </ng-container>
 
@@ -106,10 +116,10 @@
 
 <!-- Modal para Agregar Usuarios -->
 <ng-template #agregarUsuarioModal let-modal>
-  <div class="modal-content border-0 shadow-lg" style="background-color: #f8f9fa;">
+  <div class="modal-content border-0 shadow-lg rounded-0" style="background-color: #f8f9fa;">
     
     <div class="modal-header bg-light border-bottom-0 pb-0">
-      <h5 class="modal-title fw-normal text-dark">Agregar Usuario</h5>
+      <h5 class="modal-title fw-normal text-dark">Agregar usuario</h5>
       <button type="button" class="btn-close" (click)="cerrarModal()" aria-label="Close"></button>
     </div>
 
@@ -186,7 +196,7 @@
 
 <!-- Modal para Editar Usuarios -->
 <ng-template #editarUsuarioModal let-modal>
-  <div class="modal-content border-0">
+  <div class="modal-content border-0 rounded-0">
     <div class="modal-header bg-warning text-dark">
       <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user-edit me-2"></i>Editar Usuario</h5>
       <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
@@ -228,9 +238,9 @@
 
 <!-- Modal para Cambiar Estatus (Activo/Inactivo) -->
 <ng-template #estatusModal>
-  <div class="modal-content border-0 shadow-lg">
-    <div class="modal-header bg-light border-bottom-0">
-      <h5 class="modal-title text-dark fw-bold">Confirmar Acción</h5>
+  <div class="modal-content border-0 shadow-lg rounded-0">
+    <div class="modal-header bg-warning border-bottom-0 rounded-0">
+      <h5 class="modal-title text-dark fw-bold">Confirmar acción</h5>
       <button type="button" class="btn-close" (click)="cerrarModal()"></button>
     </div>
     <div class="modal-body px-4 py-4 text-center">
@@ -240,7 +250,7 @@
       <div class="d-flex justify-content-center gap-3 mt-4">
         <button class="btn btn-secondary px-4 py-2" (click)="cerrarModal()">Cancelar</button>
         <button class="btn px-4 py-2 text-white" [ngClass]="estadoSeleccionado === 1 ? 'btn-success' : 'btn-danger'" (click)="cambiarEstatus()">
-          Sí, Confirmar
+          Confirmar
         </button>
       </div>
     </div>
@@ -249,30 +259,30 @@
 
 <!-- Modal para modificar roles -->
 <ng-template #rolesModal>
-  <div class="modal-content border-0 shadow-lg">
-    <div class="modal-header bg-warning border-bottom-0">
-      <h5 class="modal-title text-dark fw-bold"><i class="fa fa-users-cog me-2"></i>Administrar Roles</h5>
+  <div class="modal-content border-0 shadow-lg rounded-0">
+    <div class="modal-header bg-warning border-bottom-0 rounded-0">
+      <h5 class="modal-title text-dark fw-bold"><i class="fa fa-users-cog me-2"></i>Administrar roles</h5>
       <button type="button" class="btn-close" (click)="cerrarModal()"></button>
     </div>
     <div class="modal-body px-4 py-3">
       <p class="text-muted mb-4 small">Activa o desactiva los permisos de este usuario en el sistema.</p>
       
       <div class="list-group">
-        <div *ngFor="let rol of rolesDisponibles" class="list-group-item d-flex justify-content-between align-items-center bg-light border-0 mb-2 rounded shadow-sm">
+        <div *ngFor="let rol of rolesDisponibles" class="list-group-item d-flex justify-content-between align-items-center bg-light border-0 mb-2 rounded-0 shadow-sm">
           <span class="fw-semibold text-dark">{{ rol.rolName }}</span>
           
-          <button *ngIf="!tieneRol(rol.id)" class="btn btn-sm btn-outline-success px-3" (click)="asignarRol(rol.id)">
+          <button *ngIf="!tieneRol(rol.id)" class="btn btn-sm btn-outline-success px-3 rounded-0" (click)="asignarRol(rol.id)">
             <i class="fa fa-plus me-1"></i> Agregar
           </button>
-          <button *ngIf="tieneRol(rol.id)" class="btn btn-sm btn-danger px-3 text-white" (click)="desactivarRol(rol.id)">
+          <button *ngIf="tieneRol(rol.id)" class="btn btn-sm btn-danger px-3 text-white rounded-0" (click)="desactivarRol(rol.id)">
             <i class="fa fa-trash me-1"></i> Remover
           </button>
         </div>
       </div>
 
     </div>
-    <div class="modal-footer border-0 bg-light">
-      <button class="btn btn-secondary px-4" (click)="cerrarModal()">Cerrar</button>
+    <div class="modal-footer border-0 bg-light rounded-0">
+      <button class="btn btn-secondary px-4 rounded-0" (click)="cerrarModal()">Cerrar</button>
     </div>
   </div>
 </ng-template>
@@ -280,23 +290,23 @@
 
 <!-- Modal para modificarar password -->
 <ng-template #passwordModal>
-  <div class="modal-content border-0 shadow-lg">
+  <div class="modal-content border-0 shadow-lg rounded-0">
     <div class="modal-header bg-primary border-bottom-0">
-      <h5 class="modal-title text-white fw-bold"><i class="fa fa-lock me-2"></i>Actualizar Contraseña</h5>
+      <h5 class="modal-title text-white fw-bold"><i class="fa fa-lock me-2"></i>Actualizar contraseña</h5>
       <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()"></button>
     </div>
     <div class="modal-body px-4 py-4">
       
       <form [formGroup]="formContrasena" (ngSubmit)="cambiarPassword()">
         <div class="form-group mb-4">
-          <label class="form-label small mb-1 fw-bold text-dark">Escribe la Nueva Contraseña</label>
+          <label class="form-label small mb-1 fw-bold text-dark">Escribe la nueva contraseña</label>
           <input formControlName="password_update" class="form-control bg-light" type="password" [ngClass]="{'is-invalid': formContrasena.get('password_update')?.invalid && formContrasena.get('password_update')?.touched}">
           <div class="invalid-feedback">Debe contener mayúscula, minúscula y número (Mín. 8 caracteres).</div>
         </div>
         
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button class="btn btn-secondary px-4 py-2" type="button" (click)="cerrarModal()">Cancelar</button>
-          <button class="btn btn-primary px-4 py-2 text-white" type="submit">Guardar Cambios</button>
+          <button class="btn btn-primary px-4 py-2 text-white" type="submit">Guardar cambios</button>
         </div>
       </form>
 
