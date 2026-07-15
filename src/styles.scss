@@ -13,3 +13,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .modal-footer {
   border-radius: 0 !important;
 }
+
+/* ==========================================================================
+   Sobrescritura de modales para Angular Material (MatDialog)
+   ========================================================================== */
+
+/* 1. Quitamos los bordes redondeados del contenedor principal del dialog */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 0 !important;
+}
+
+/* 2. (Opcional pero recomendado) Quitamos el padding interno automático 
+   para que tu diseño Bootstrap ocupe el 100% del espacio del modal y no 
+   se vean márgenes blancos indeseados */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  padding: 0 !important;
+}
+
+/* 3. Aseguramos que el contenido interno se adapte correctamente */
+.mat-mdc-dialog-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-height: none !important;
+} 

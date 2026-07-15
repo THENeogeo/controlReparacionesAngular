@@ -12,11 +12,58 @@
   </header>
 
   <div class="d-flex">
-    <aside style="width: 250px; min-height: 100vh; background: #506982; color: white;" class="p-3">
+    <aside style="width: 250px; min-height: 100vh; background: #35424e; color: white;" class="p-3">
       <p class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px;">Menú</p>
+      
       <ul class="nav flex-column gap-2">
-        <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="/usuarios">Usuarios</a></li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/dashboard">Inicio</a>
+        </li>
+
+        <!-- Administración  -->
+        <li class="nav-item">
+          <a class="nav-link text-white d-flex justify-content-between align-items-center" 
+            style="cursor: pointer;" 
+            (click)="menuAdminAbierto = !menuAdminAbierto">
+            <span>Administración</span>
+            <i class="fa" [ngClass]="menuAdminAbierto ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          </a>
+          
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuAdminAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/usuarios">Usuarios</a>
+            </li>
+          </ul>
+
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuAdminAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/reparaciones">Reparaciones</a>
+            </li>
+          </ul>
+
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuAdminAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/usuarios">Catálogos</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Solicitudes  -->
+        <li class="nav-item">
+          <a class="nav-link text-white d-flex justify-content-between align-items-center"
+            style="cursor: pointer;" 
+            (click)="menuSolicitudesAbierto = !menuSolicitudesAbierto">
+            <span>Solicitudes</span>
+            <i class="fa menu-arrow" [ngClass]="menuSolicitudesAbierto ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          </a>
+          
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuSolicitudesAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/reparaciones">Reparaciones</a>
+            </li>
+          </ul>
+        </li>
+
       </ul>
     </aside>
 

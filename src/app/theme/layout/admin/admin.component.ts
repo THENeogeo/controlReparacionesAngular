@@ -17,6 +17,10 @@ import { MatButtonModule } from '@angular/material/button'; // Para el botón de
 })
 export class AdminComponent {
 
+  menuAdminAbierto: boolean = false; // Controla si el menú lateral está abierto o cerrado
+  menuSolicitudesAbierto: boolean = false;
+  menuReportesAbierto: boolean = false;
+
   // Por ahora el componente está limpio.
   // Más adelante, aquí agregaremos la lógica para:
   // 1. Ocultar/Mostrar el menú lateral en pantallas pequeñas.

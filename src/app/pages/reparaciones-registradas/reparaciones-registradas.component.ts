@@ -12,18 +12,23 @@ import { FormsModule } from '@angular/forms';
 })
 export class ReparacionesRegistradasComponent implements OnInit {
 
+  // Catálogos
+  tiposEquipo: any[] = [];
+  marcas: any[] = [];
+  modelos: any[] = [];
+  refacciones: any[] = [];
+  tiposRefacciones: any[] = [];
+  areas: any[] = [];
+
+
   // Lista de reparaciones obtenidas desde el backend
   reparaciones: any[] = [];
-
   // Reparación seleccionada para eliminar
   reparacionSeleccionada: any = null;
-
   // Variable para controlar la visibilidad del modal
   mostrarModalEliminar: boolean = false; 
-
   // Reparación seleccionada para editar
   reparacionEditar: any = null;
-
   // Controla la visibilidad del modal de edición
   mostrarModalEditar: boolean = false;
 
@@ -33,6 +38,42 @@ export class ReparacionesRegistradasComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarReparaciones();
+  }
+
+  // Método que lista todos los tipos de equipo
+  listarTiposEquipo(): void{
+
+    this.crudService
+      .get('catalogos/equipos/listarTodosLosTiposDeEquipo')
+      .subscribe({
+
+        next: (response: any) => {
+          console.log('Tipos de equipo: ', response);
+          this.tiposEquipo = response || [];
+        },
+        error: (error) => {
+          console.error('Error al obtener tipos de equipo', error);
+        }
+      });
+  }
+
+  // Método que lista las marcas dependiendo del tipo de equipo seleccionado
+  listarMarcasPorTipoEquipo(idTipoEquipo: number): void {
+
+    this.crudService
+      .get(`catalogos/marcas/listarMarcasPorTipoEquipo/${idTipoEquipo}`)
+      .subscribe({
+
+        next: (response: any) => {
+          console.log('Marcas:',response);
+          this.marcas = response || [];
+        },
+        error: (error) => {
+
+          console.error('Error al obtener las marcas:', error);
+          this.marcas = [];
+        }
+      });
   }
 
   // Enlista los registros de reparaciones
@@ -66,10 +107,7 @@ export class ReparacionesRegistradasComponent implements OnInit {
     this.reparacionSeleccionada = reparacion;
     this.mostrarModalEliminar = true; // Abre el modal
 
-    console.log(
-      'Reparación seleccionada:',
-      this.reparacionSeleccionada
-    );
+    console.log('Reparación seleccionada:',this.reparacionSeleccionada);
   }
 
   // Limpia la reparación seleccionada y oculta el modal
@@ -139,8 +177,7 @@ export class ReparacionesRegistradasComponent implements OnInit {
 
   // Abre el modal de edición y obtiene los datos de la reparación seleccionada
   abrirModalEditar(id: any): void {
-
-    // Obtiene la reparación para editar desde el backend
+    // Obtiene la reparación para editar
     this.crudService
       .get(`registro-reparacion/obtenerRegistroReparacionParaEditar/${id}`)
       .subscribe({
@@ -148,6 +185,8 @@ export class ReparacionesRegistradasComponent implements OnInit {
           console.log('Reparación para editar:',response);
 
           this.reparacionEditar = response; // Guarda la reparación obtenida para editar
+          this.listarTiposEquipo();
+          this.listarMarcasPorTipoEquipo(response.idTipoEquipo);
           this.mostrarModalEditar = true; // Mostrar el modal de edición
 
         },
@@ -158,6 +197,27 @@ export class ReparacionesRegistradasComponent implements OnInit {
           );
         }
       });
+  }
+
+  // Cuando cambia el tipo de equipo
+  onTipoEquipoChange(): void {
+    // Reiniciar selects dependientes
+    this.reparacionEditar.idMarca = null;
+    this.reparacionEditar.idModelo = null;
+    this.reparacionEditar.idRefaccion = null;
+    // Vaciar arreglos
+    this.marcas = [];
+    this.modelos = [];
+    this.refacciones = [];
+
+    if (!this.reparacionEditar.idTipoEquipo) {
+      return;
+    }
+
+    this.listarMarcasPorTipoEquipo(
+      this.reparacionEditar.idTipoEquipo
+    );
+
   }
 
   actualizarReparacion(): void {
