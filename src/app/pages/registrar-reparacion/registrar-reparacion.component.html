@@ -1,0 +1,187 @@
+<div class="card shadow mb-4 mt-4 mx-3">
+    <!-- Encabezado -->
+    <div
+        class="card-header d-flex flex-row align-items-center justify-content-between bg-light py-3 border-bottom-0">
+        <h5 class="m-0 fw-bold text-primary">Registro de reparaciones</h5>
+        <span class="text-primary fw-bold fs-5">Registro / Reparaciones</span>
+    </div>
+
+    <!-- Cuerpo -->
+    <div class="card-body" style="background-color: #e5e5e5;">
+        <!-- Barra de botones -->
+        <div class="mb-4">
+            <!-- Botón para regresar -->
+            <button
+                type="button"
+                class="btn btn-outline-warning px-3 py-2 fw-semibold me-2"
+                style="border-radius: 4px;"
+                onclick="window.location.href='/dashboard'">
+                <i class="fa fa-file-alt me-2"></i> Regresar
+            </button>
+
+            <!-- Botón para ver las reparaciones registradas -->
+            <button
+                type="button"
+                class="btn btn-outline-success px-3 py-2 fw-semibold"
+                style="border-radius: 4px;"
+                onclick="window.location.href='/reparaciones'">
+                <i class="fa fa-plus me-2"></i> Reparaciones registradas
+            </button>
+        </div>
+        <!-- Información -->
+        <div
+            class="alert rounded-0 mb-4 px-4 py-3 d-flex align-items-center"
+            style="
+                background-color: #8ce1f6;
+                border: none;
+                border-bottom: 2px solid #5ab0c5;
+            ">
+            <div>
+                <h4 class="mb-1 text-dark">Registrar reparación</h4>
+                <p class="mb-0 text-dark">
+                <i class="fa fa-plus me-1"></i>
+                <strong>*</strong>
+                Completa la información del formulario para registrar una nueva reparación. Asegúrate de ingresar los datos correctamente antes de enviar el formulario.
+                </p>
+            </div>
+        </div>
+
+        <!-- Formulario de registro -->
+        <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-white">
+            <form [formGroup]="formReparacion">
+
+                <!-- SECCIÓN 1: Información del equipo -->
+                <div class="d-flex align-items-center mb-3 mt-2">
+                    <span class="badge bg-primary rounded-circle p-2 fs-5 me-2" style="width: 35px; height: 35px;">1</span>
+                    <div>
+                        <h5 class="m-0 fw-bold text-dark">Información del equipo</h5>
+                        <small class="text-muted">Selecciona el tipo de equipo, marca y modelo.</small>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">Tipo de equipo <span class="text-danger">*</span></label>
+                        <select class="form-select bg-light" formControlName="idTipoEquipo" (change)="onTipoEquipoChange()" [ngClass]="{'is-invalid': formReparacion.get('idTipoEquipo')?.invalid && formReparacion.get('idTipoEquipo')?.touched}">
+                            <option value="">Selecciona una opción</option>
+                            <option *ngFor="let equipo of tiposEquipo" [value]="equipo.idTipoEquipo">{{ equipo.descripcion }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">Marca <span class="text-danger">*</span></label>
+                        <select class="form-select bg-light" formControlName="idMarca" (change)="onMarcaChange()" [ngClass]="{'is-invalid': formReparacion.get('idMarca')?.invalid && formReparacion.get('idMarca')?.touched}">
+                            <option value="">Selecciona una opción</option>
+                            <option *ngFor="let marca of marcas" [value]="marca.idMarca">{{ marca.descripcion }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">Modelo <span class="text-danger">*</span></label>
+                        <select class="form-select bg-light" formControlName="idModelo" [ngClass]="{'is-invalid': formReparacion.get('idModelo')?.invalid && formReparacion.get('idModelo')?.touched}">
+                            <option value="">Selecciona una opción</option>
+                            <option *ngFor="let modelo of modelos" [value]="modelo.idModelo">{{ modelo.descripcion }}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">
+                            Inventario <span class="text-danger">*</span>
+                        </label>
+
+                        <input 
+                            type="text" 
+                            class="form-control bg-light"
+                            formControlName="inventario"
+                            maxlength="18"
+                            placeholder="Ej. 5151000138-00000"
+                            (input)="validarInventario($event)"
+                            [ngClass]="{
+                                'is-invalid': formReparacion.get('inventario')?.invalid 
+                                    && formReparacion.get('inventario')?.touched
+                            }">
+                    </div>
+                    <!-- <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Inventario <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control bg-light" formControlName="inventario" maxlength="18" placeholder="Ej. 5151000138-00000" [ngClass]="{'is-invalid': formReparacion.get('inventario')?.invalid && formReparacion.get('inventario')?.touched}">
+                    </div> -->
+                    <!-- <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Nombre del equipo</label>
+                        <input type="text" class="form-control bg-light" formControlName="refaccionInventario" placeholder="Ej. Computadora de oficina">
+                    </div> -->
+                </div>
+
+                <hr class="text-muted mb-4">
+
+                <!-- SECCIÓN 2: Detalles de la reparación -->
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-primary rounded-circle p-2 fs-5 me-2" style="width: 35px; height: 35px;">2</span>
+                    <div>
+                        <h5 class="m-0 fw-bold text-dark">Detalles de la reparación</h5>
+                        <small class="text-muted">Especifica la información de la reparación.</small>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Refacción</label>
+                        <select class="form-select bg-light" formControlName="idRefaccion">
+                            <option value="">Selecciona una opción</option>
+                            <option *ngFor="let ref of refacciones" [value]="ref.idRefaccion">{{ ref.descripcion }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Tipo de refacción</label>
+                        <select class="form-select bg-light" formControlName="idTipoRefaccion">
+                            <option value="">Selecciona una opción</option>
+                            <option *ngFor="let tRef of tiposRefacciones" [value]="tRef.idTipoRefaccion">{{ tRef.descripcion }}</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small fw-semibold">Descripción de la reparación <span class="text-danger">*</span></label>
+                        <textarea class="form-control bg-light" rows="3" formControlName="descripcionReporte" maxlength="200" placeholder="Describe el problema o la falla del equipo..." [ngClass]="{'is-invalid': formReparacion.get('descripcionReporte')?.invalid && formReparacion.get('descripcionReporte')?.touched}"></textarea>
+                    </div>
+                </div>
+
+                <hr class="text-muted mb-4">
+
+                <!-- SECCIÓN 3: Información adicional -->
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-primary rounded-circle p-2 fs-5 me-2" style="width: 35px; height: 35px;">3</span>
+                    <div>
+                        <h5 class="m-0 fw-bold text-dark">Información adicional</h5>
+                        <small class="text-muted">Datos complementarios para el control.</small>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Área <span class="text-danger">*</span></label>
+                        <select class="form-select bg-light" formControlName="idArea" [ngClass]="{'is-invalid': formReparacion.get('idArea')?.invalid && formReparacion.get('idArea')?.touched}">
+                            <option value="">Selecciona una opción</option>
+                            <option *ngFor="let area of areas" [value]="area.idArea">{{ area.descripcion }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">No. de expediente</label>
+                        <input type="text" class="form-control bg-light" formControlName="expediente" maxlength="5" placeholder="Ej. 23706">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Fecha de registro <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control bg-light" formControlName="fechaRegistro" [ngClass]="{'is-invalid': formReparacion.get('fechaRegistro')?.invalid && formReparacion.get('fechaRegistro')?.touched}">
+                    </div>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="d-flex justify-content-between mt-5">
+                    <button type="button" class="btn btn-light border px-4 fw-semibold text-dark" onclick="window.location.href='/dashboard'">
+                        <i class="fa fa-times me-2"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary px-4 fw-semibold shadow-sm" (click)="guardarReparacion()">
+                        <i class="fa fa-save me-2"></i> Guardar reparación
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>

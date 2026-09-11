@@ -8,12 +8,21 @@
 
   <!-- Cuerpo -->
   <div class="card-body" style="background-color: #e5e5e5;">
-    <!-- Botón para registrar una nueva reparación -->
+    <!-- Botón para regresar -->
     <div class="mb-4">
       <button
         type="button"
+        class="btn btn-outline-warning px-3 py-2 fw-semibold me-2"
+        style="border-radius: 4px;"
+        onclick="window.location.href='/dashboard'">
+        <i class="fa fa-file-alt me-2"></i> Regresar
+      </button>
+      <!-- Botón para registrar una nueva reparación -->
+      <button
+        type="button"
         class="btn btn-outline-success px-3 py-2 fw-semibold"
-        style="border-radius: 4px;">
+        style="border-radius: 4px;"
+        onclick="window.location.href='/registrar-reparacion'">
         <i class="fa fa-plus me-2"></i> Registrar nueva reparación
       </button>
     </div>
@@ -30,7 +39,7 @@
         <p class="mb-0 text-dark">
           <i class="fa fa-search me-1"></i>
           <strong>Criterios de búsqueda:</strong>
-          Folio, Cliente, Equipo, Estado
+          Folio, Expediente, Equipo, Inventario
         </p>
       </div>
     </div>
@@ -46,8 +55,41 @@
           <option value="25">25</option>
           <option value="50">50</option>
         </select>
-        <span>Entradas</span>
+        <span>registros</span>
       </div>
+
+      <!-- Filtro por fechas -->
+      <div class="d-flex align-items-center gap-2">
+        <span>Filtrar de:</span>
+        <input
+          type="date"
+          class="form-control form-control-sm"
+          style="width: 150px;"
+          [(ngModel)]="fechaInicio">
+        <span>a</span>
+        <input
+          type="date"
+          class="form-control form-control-sm"
+          style="width: 150px;"
+          [(ngModel)]="fechaFin">
+        
+        <button
+          type="button"
+          class="btn btn-sm btn-primary"
+          (click)="filtrarPorFechas()">
+          <i class="fa fa-filter me-1"></i> Filtrar
+        </button>
+
+        <!-- Opcional: Botón rápido para limpiar el filtro -->
+        <button
+          *ngIf="fechaInicio || fechaFin"
+          type="button"
+          class="btn btn-sm btn-secondary"
+          (click)="limpiarFiltro()">
+          <i class="fa fa-times"></i> Limpiar
+        </button>
+      </div>
+
       
       <!-- Buscador -->
       <div class="d-flex align-items-center gap-2">
@@ -343,7 +385,10 @@
 
               <div class="mb-3">
                 <label class="form-label">Tipo de equipo</label>
-                <select class="form-select" [(ngModel)]="reparacionEditar.idTipoEquipo" (change)="onTipoEquipoChange()">
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idTipoEquipo"
+                        (change)="onTipoEquipoChange()"
+                        name="idTipoEquipo">
                   <option [ngValue]="null">Seleccione...</option>
                   <option *ngFor="let equipo of tiposEquipo" [ngValue]="equipo.idTipoEquipo">
                     {{ equipo.descripcion }}
@@ -353,13 +398,56 @@
 
               <div class="mb-3">
                 <label class="form-label">Marca</label>
-                <select class="form-select" [(ngModel)]="reparacionEditar.idMarca">
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idMarca"
+                        (change)="onMarcaChange()"
+                        name="idMarca">
                   <option [ngValue]="null">Seleccione...</option>
                   <option *ngFor="let marca of marcas" [ngValue]="marca.idMarca">
                     {{ marca.descripcion }}
                   </option>
                 </select>
               </div>
+
+              <!-- Modelo -->
+              <div class="mb-3">
+                <label class="form-label">Modelo</label>
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idModelo"
+                        name="idModelo">
+                  <option [ngValue]="null">Seleccione...</option>
+                  <option *ngFor="let modelo of modelos" [ngValue]="modelo.idModelo">
+                    {{ modelo.descripcion }}  
+                  </option>
+                </select>
+              </div>
+              
+              <!-- <div class="mb-3">
+                <label class="form-label">Tipo de equipo</label>
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idTipoEquipo"
+                        (change)="onTipoEquipoChange()"
+                        name="idTipoEquipo"
+                        [compareWith]="compararPorId">
+                  <option [ngValue]="null">Seleccione...</option>
+                  <option *ngFor="let equipo of tiposEquipo" [ngValue]="equipo.idTipoEquipo">
+                    {{ equipo.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Marca</label>
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idMarca"
+                        name="idMarca"
+                        [compareWith]="compararPorId">
+                  <option [ngValue]="null">Seleccione...</option>
+                  <option *ngFor="let marca of marcas" [ngValue]="marca.idMarca">
+                    {{ marca.descripcion }}
+                  </option>
+                </select>
+              </div> -->
 
               <div class="mb-3">
                 <label class="form-label">Inventario del equipo</label>
@@ -368,6 +456,32 @@
                   class="form-control"
                   [(ngModel)]="reparacionEditar.inventario"
                   name="inventario">
+              </div>
+
+              <!-- Refacción -->
+              <div class="mb-3">
+                <label class="form-label">Refacción</label>
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idRefaccion"
+                        name="idRefaccion">
+                  <option [ngValue]="null">Seleccione...</option>
+                  <option *ngFor="let ref of refacciones" [ngValue]="ref.idRefaccion">
+                    {{ ref.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Tipo de refacción -->
+              <div class="mb-3">
+                <label class="form-label">Tipo de refacción</label>
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idTipoRefaccion"
+                        name="idTipoRefaccion">
+                  <option [ngValue]="null">Seleccione...</option>
+                  <option *ngFor="let tRef of tiposRefacciones" [ngValue]="tRef.idTipoRefaccion">
+                    {{ tRef.descripcion }}
+                  </option>
+                </select>
               </div>
 
               <div class="mb-3">
@@ -398,16 +512,17 @@
                 </textarea>
               </div>
 
+              <!-- Área  -->
               <div class="mb-3">
-                <label class="form-label">
-                    Descripción
-                </label>
-                <textarea
-                    rows="4"
-                    class="form-control"
-                    [(ngModel)]="reparacionEditar.descripcionReporte"
-                    name="descripcionReporte">
-                </textarea>
+                <label class="form-label">Área</label>
+                <select class="form-select"
+                        [(ngModel)]="reparacionEditar.idArea"
+                        name="idArea">
+                  <option [ngValue]="null">Seleccione...</option>
+                  <option *ngFor="let area of areas" [ngValue]="area.idArea">
+                    {{ area.descripcion }}
+                  </option>
+                </select>
               </div>
 
               <div class="mb-3">

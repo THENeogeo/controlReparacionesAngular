@@ -20,6 +20,10 @@ export class ReparacionesRegistradasComponent implements OnInit {
   tiposRefacciones: any[] = [];
   areas: any[] = [];
 
+  // Variables para el filtro de fechas
+  fechaInicio: string = '';
+  fechaFin: string = '';
+
 
   // Lista de reparaciones obtenidas desde el backend
   reparaciones: any[] = [];
@@ -38,6 +42,8 @@ export class ReparacionesRegistradasComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarReparaciones();
+    this.listarTiposEquipo();
+    this.cargarCatalogosIndependientes(); // Cargamos Áreas y Tipos de Refacción
   }
 
   // Método que lista todos los tipos de equipo
@@ -59,7 +65,6 @@ export class ReparacionesRegistradasComponent implements OnInit {
 
   // Método que lista las marcas dependiendo del tipo de equipo seleccionado
   listarMarcasPorTipoEquipo(idTipoEquipo: number): void {
-
     this.crudService
       .get(`catalogos/marcas/listarMarcasPorTipoEquipo/${idTipoEquipo}`)
       .subscribe({
@@ -102,6 +107,36 @@ export class ReparacionesRegistradasComponent implements OnInit {
       });
   }
 
+  // Filtra las reparaciones según el rango de fechas seleccionado
+  filtrarPorFechas(): void {
+    // Validamos que ambas fechas estén seleccionadas antes de consultar al backend
+    if (!this.fechaInicio || !this.fechaFin) {
+      console.warn('Debe seleccionar ambas fechas para filtrar.');
+      return;
+    }
+
+    // Armamos la URL concatenando los query parameters tal como los pide Swagger
+    const endpoint = `registro-reparacion/listarRegistroReparacionPorFechas?fechaInicio=${this.fechaInicio}&fechaFin=${this.fechaFin}`;
+
+    this.crudService.get(endpoint).subscribe({
+      next: (response: any) => {
+        console.log('Reparaciones filtradas:', response);
+        this.reparaciones = response || [];
+      },
+      error: (error) => {
+        console.error('Error al filtrar las reparaciones:', error);
+        this.reparaciones = [];
+      }
+    });
+  }
+
+  // Limpia los inputs y vuelve a cargar todos los registros
+  limpiarFiltro(): void {
+    this.fechaInicio = '';
+    this.fechaFin = '';
+    this.listarReparaciones();
+  }
+
   // Guarda la reparación seleccionada y muestra el modal
   seleccionarReparacion(reparacion: any): void {
     this.reparacionSeleccionada = reparacion;
@@ -118,7 +153,6 @@ export class ReparacionesRegistradasComponent implements OnInit {
 
   // Elimina una reparación por su ID y actualiza la lista de reparaciones
   eliminarReparacion(): void {
-
     if (!this.reparacionSeleccionada) {
       console.error(
         'No hay una reparación seleccionada'
@@ -156,7 +190,6 @@ export class ReparacionesRegistradasComponent implements OnInit {
 
   // Formatea la fecha que se muestra en el frontend | Ejemplo: 2026-07-08 -> 08-07-2026
   formatearFecha(fecha: string): string {
-
     if (!fecha) {
       return '';
     }
@@ -175,28 +208,31 @@ export class ReparacionesRegistradasComponent implements OnInit {
     return `STE-REP-GTI-${id}`;
   }
 
-  // Abre el modal de edición y obtiene los datos de la reparación seleccionada
-  abrirModalEditar(id: any): void {
-    // Obtiene la reparación para editar
-    this.crudService
-      .get(`registro-reparacion/obtenerRegistroReparacionParaEditar/${id}`)
-      .subscribe({
-        next: (response: any) => {
-          console.log('Reparación para editar:',response);
+  // Cuando cambia la Marca
+  onMarcaChange(): void {
+    // Reiniciar selects dependientes
+    this.reparacionEditar.idModelo = null;
+    this.reparacionEditar.idRefaccion = null;
+    
+    // Vaciar arreglos dependientes
+    this.modelos = [];
+    this.refacciones = [];
 
-          this.reparacionEditar = response; // Guarda la reparación obtenida para editar
-          this.listarTiposEquipo();
-          this.listarMarcasPorTipoEquipo(response.idTipoEquipo);
-          this.mostrarModalEditar = true; // Mostrar el modal de edición
+    if (!this.reparacionEditar.idMarca) {
+      return;
+    }
 
-        },
-        error: (error) => {
-          console.error(
-            'Error al obtener la reparación para editar:',
-            error
-          );
-        }
-      });
+    this.listarModelosPorMarca(this.reparacionEditar.idMarca);
+  }
+
+  // Carga los catálogos que no dependen de ningún otro valor
+  cargarCatalogosIndependientes(): void {
+    this.crudService.get('catalogos/refacciones/listarTipoRefaccion').subscribe({
+      next: (res: any) => this.tiposRefacciones = res || []
+    });
+    this.crudService.get('catalogos/areas/listarAreas').subscribe({
+      next: (res: any) => this.areas = res || []
+    });
   }
 
   // Cuando cambia el tipo de equipo
@@ -205,6 +241,7 @@ export class ReparacionesRegistradasComponent implements OnInit {
     this.reparacionEditar.idMarca = null;
     this.reparacionEditar.idModelo = null;
     this.reparacionEditar.idRefaccion = null;
+    
     // Vaciar arreglos
     this.marcas = [];
     this.modelos = [];
@@ -214,11 +251,235 @@ export class ReparacionesRegistradasComponent implements OnInit {
       return;
     }
 
-    this.listarMarcasPorTipoEquipo(
-      this.reparacionEditar.idTipoEquipo
-    );
-
+    this.listarMarcasPorTipoEquipo(this.reparacionEditar.idTipoEquipo);
+    this.listarRefaccionesPorTipoEquipo(this.reparacionEditar.idTipoEquipo);
   }
+
+  // Método que lista las refacciones dependiendo del equipo
+  listarRefaccionesPorTipoEquipo(idTipoEquipo: number): void {
+    this.crudService
+      .get(`catalogos/refacciones/listarRefaccionesPorTipoEquipo/${idTipoEquipo}`)
+      .subscribe({
+        next: (res: any) => this.refacciones = res || [],
+        error: () => this.refacciones = []
+      });
+  }
+
+  // Método que lista los modelos dependiendo de la marca seleccionada
+  listarModelosPorMarca(idMarca: number): void {
+    // Suponiendo que este sea tu endpoint correcto en el backend:
+    this.crudService
+      .get(`catalogos/modelos/listarModelosPorMarca/${idMarca}`)
+      .subscribe({
+        next: (response: any) => {
+          console.log('Modelos:', response);
+          this.modelos = response || [];
+        },
+        error: (error) => {
+          console.error('Error al obtener los modelos:', error);
+          this.modelos = [];
+        }
+      });
+  }
+
+  // Abre el modal de edición, desencadena la carga en cascada y muestra el modal
+  abrirModalEditar(id: any): void {
+    this.crudService
+      .get(`registro-reparacion/obtenerRegistroReparacionParaEditar/${id}`)
+      .subscribe({
+        next: (response: any) => {
+          console.log('Reparación para editar:', response);
+
+          // 1. Forzamos tipado numérico
+          const datosReparacion = { 
+            ...response,
+            idTipoEquipo: response.idTipoEquipo != null ? Number(response.idTipoEquipo) : null,
+            idMarca:      response.idMarca      != null ? Number(response.idMarca)      : null,
+            idModelo:     response.idModelo     != null ? Number(response.idModelo)     : null,
+            idRefaccion:  response.idRefaccion  != null ? Number(response.idRefaccion)  : null,
+            idTipoRefaccion: response.idTipoRefaccion != null ? Number(response.idTipoRefaccion) : null,
+            idArea:       response.idArea       != null ? Number(response.idArea)       : null
+          };
+
+          // 2. Iniciamos la cascada de catálogos dependientes
+          if (datosReparacion.idTipoEquipo) {
+            
+            // A. Cargamos Marcas
+            this.crudService.get(`catalogos/marcas/listarMarcasPorTipoEquipo/${datosReparacion.idTipoEquipo}`).subscribe(resMarcas => {
+              this.marcas = resMarcas || [];
+
+              // B. Cargamos Refacciones
+              this.crudService.get(`catalogos/refacciones/listarRefaccionesPorTipoEquipo/${datosReparacion.idTipoEquipo}`).subscribe(resRefacciones => {
+                this.refacciones = resRefacciones || [];
+
+                // C. Cargamos Modelos (si hay marca)
+                if (datosReparacion.idMarca) {
+                  this.crudService.get(`catalogos/modelos/listarModelosPorMarca/${datosReparacion.idMarca}`).subscribe(resModelos => {
+                    this.modelos = resModelos || [];
+                    
+                    // ¡Todo cargado! Mostramos modal
+                    this.reparacionEditar = datosReparacion;
+                    this.mostrarModalEditar = true;
+                  });
+                } else {
+                  this.reparacionEditar = datosReparacion;
+                  this.mostrarModalEditar = true;
+                }
+              });
+            });
+          } else {
+            // Si el registro no tiene equipo
+            this.marcas = [];
+            this.modelos = [];
+            this.refacciones = [];
+            this.reparacionEditar = datosReparacion;
+            this.mostrarModalEditar = true;
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener la reparación para editar:', error);
+        }
+      });
+  }
+
+  // Abre el modal de edición y obtiene los datos de la reparación seleccionada
+  // abrirModalEditar(id: any): void {
+  //   this.crudService
+  //     .get(`registro-reparacion/obtenerRegistroReparacionParaEditar/${id}`)
+  //     .subscribe({
+  //       next: (response: any) => {
+  //         console.log('Reparación para editar:', response);
+
+  //         // 1. Preparamos los datos forzando el tipado numérico
+  //         const datosReparacion = { 
+  //           ...response,
+  //           idTipoEquipo: response.idTipoEquipo != null ? Number(response.idTipoEquipo) : null,
+  //           idMarca:      response.idMarca      != null ? Number(response.idMarca)      : null,
+  //           idModelo:     response.idModelo     != null ? Number(response.idModelo)     : null,
+  //           idRefaccion:  response.idRefaccion  != null ? Number(response.idRefaccion)  : null,
+  //           idTipoRefaccion: response.idTipoRefaccion != null ? Number(response.idTipoRefaccion) : null,
+  //           idArea:       response.idArea       != null ? Number(response.idArea)       : null
+  //         };
+
+  //         // 2. Cargamos las Marcas si hay un Tipo de Equipo
+  //         if (datosReparacion.idTipoEquipo) {
+  //           this.crudService.get(`catalogos/marcas/listarMarcasPorTipoEquipo/${datosReparacion.idTipoEquipo}`).subscribe({
+  //             next: (marcas: any) => {
+  //               this.marcas = marcas || [];
+                
+  //               // 3. Cargamos los Modelos si hay una Marca
+  //               if (datosReparacion.idMarca) {
+  //                 this.crudService.get(`catalogos/modelos/listarModelosPorMarca/${datosReparacion.idMarca}`).subscribe({
+  //                   next: (modelos: any) => {
+  //                     this.modelos = modelos || [];
+                      
+  //                     // ¡TODO CARGADO! Asignamos el objeto y mostramos el modal
+  //                     this.reparacionEditar = datosReparacion;
+  //                     this.mostrarModalEditar = true;
+  //                   },
+  //                   error: () => {
+  //                     this.modelos = [];
+  //                     this.reparacionEditar = datosReparacion;
+  //                     this.mostrarModalEditar = true;
+  //                   }
+  //                 });
+  //               } else {
+  //                 // Si no hay marca guardada, abrimos directamente
+  //                 this.reparacionEditar = datosReparacion;
+  //                 this.mostrarModalEditar = true;
+  //               }
+  //             },
+  //             error: (err) => {
+  //               console.error('Error al obtener marcas:', err);
+  //               this.marcas = [];
+  //               this.reparacionEditar = datosReparacion;
+  //               this.mostrarModalEditar = true;
+  //             }
+  //           });
+  //         } else {
+  //           // Si no hay tipo de equipo, abrimos el modal directo
+  //           this.marcas = [];
+  //           this.modelos = [];
+  //           this.reparacionEditar = datosReparacion;
+  //           this.mostrarModalEditar = true;
+  //         }
+  //       },
+  //       error: (error) => {
+  //         console.error('Error al obtener la reparación para editar:', error);
+  //       }
+  //     });
+  // }
+  
+  // Abre el modal de edición y obtiene los datos de la reparación seleccionada
+  // abrirModalEditar(id: any): void {
+  //   this.crudService
+  //     .get(`registro-reparacion/obtenerRegistroReparacionParaEditar/${id}`)
+  //     .subscribe({
+  //       next: (response: any) => {
+  //         console.log('Reparación para editar:', response);
+
+  //         // 1. Preparamos los datos forzando el tipado numérico
+  //         const datosReparacion = { 
+  //           ...response,
+  //           idTipoEquipo: response.idTipoEquipo != null ? Number(response.idTipoEquipo) : null,
+  //           idMarca:      response.idMarca      != null ? Number(response.idMarca)      : null,
+  //           idModelo:     response.idModelo     != null ? Number(response.idModelo)     : null,
+  //           idRefaccion:  response.idRefaccion  != null ? Number(response.idRefaccion)  : null,
+  //           idTipoRefaccion: response.idTipoRefaccion != null ? Number(response.idTipoRefaccion) : null,
+  //           idArea:       response.idArea       != null ? Number(response.idArea)       : null
+  //         };
+
+  //         // 2. Cargamos las marcas dependientes ANTES de mostrar el formulario
+  //         if (datosReparacion.idTipoEquipo) {
+  //           this.crudService.get(`catalogos/marcas/listarMarcasPorTipoEquipo/${datosReparacion.idTipoEquipo}`).subscribe({
+  //             next: (marcas: any) => {
+  //               this.marcas = marcas || [];
+                
+  //               // 3. AHORA SÍ: Asignamos el objeto. Al hacer esto, el *ngIf del HTML se activa
+  //               // y dibuja los <select> con las opciones ya cargadas, seleccionando el correcto de inmediato.
+  //               this.reparacionEditar = datosReparacion;
+  //               this.mostrarModalEditar = true;
+  //             },
+  //             error: (err) => {
+  //               console.error('Error al obtener marcas:', err);
+  //               this.marcas = [];
+  //               this.reparacionEditar = datosReparacion;
+  //               this.mostrarModalEditar = true;
+  //             }
+  //           });
+  //         } else {
+  //           // Si el registro no tiene equipo, abrimos el modal directo
+  //           this.marcas = [];
+  //           this.reparacionEditar = datosReparacion;
+  //           this.mostrarModalEditar = true;
+  //         }
+  //       },
+  //       error: (error) => {
+  //         console.error('Error al obtener la reparación para editar:', error);
+  //       }
+  //     });
+  // }
+
+  // Cuando cambia el tipo de equipo
+  // onTipoEquipoChange(): void {
+  //   // Reiniciar selects dependientes
+  //   this.reparacionEditar.idMarca = null;
+  //   this.reparacionEditar.idModelo = null;
+  //   this.reparacionEditar.idRefaccion = null;
+  //   // Vaciar arreglos
+  //   this.marcas = [];
+  //   this.modelos = [];
+  //   this.refacciones = [];
+
+  //   if (!this.reparacionEditar.idTipoEquipo) {
+  //     return;
+  //   }
+
+  //   this.listarMarcasPorTipoEquipo(
+  //     this.reparacionEditar.idTipoEquipo
+  //   );
+
+  // }
 
   actualizarReparacion(): void {
   }
