@@ -127,14 +127,25 @@
                         <span class="input-group-text bg-white text-muted border-end-0"><i class="fa fa-search"></i></span>
                         <input type="text" class="form-control border-start-0 ps-0" placeholder="Buscar tipo de equipo...">
                     </div>
+                    <!-- Filtro de Estado -->
                     <div>
+                        <label class="small text-muted me-2">Estado</label>
+                        <select class="form-select form-select-sm d-inline-block w-auto"
+                                [(ngModel)]="filtroEstado" 
+                                (change)="aplicarFiltros()">
+                            <option value="Todos">Todos</option>
+                            <option value="Activos">Activos</option>
+                            <option value="Inactivos">Inactivos</option>
+                        </select>
+                    </div>
+                    <!-- <div>
                         <label class="small text-muted me-2">Estado</label>
                         <select class="form-select form-select-sm d-inline-block w-auto">
                             <option>Todos</option>
                             <option>Activos</option>
                             <option>Inactivos</option>
                         </select>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Tabla -->
@@ -149,23 +160,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let equipo of tiposEquipo">
+                            <tr *ngFor="let equipo of tiposEquipoFiltrados">
                                 <td class="fw-medium text-dark">{{ equipo.idTipoEquipo }}</td>
                                 <td>{{ equipo.descripcion }}</td>
                                 <td>
-                                    <!-- Si el estatus es 1 es Activo, de lo contrario Inactivo -->
-                                    <span class="badge px-3 py-2 rounded-pill" [ngClass]="equipo.estatus === 1 ? 'bg-success bg-opacity-10 text-success border border-success' : 'bg-danger bg-opacity-10 text-danger border border-danger'">
+                                    <!-- Etiqueta de estado con colores sólidos -->
+                                    <span class="badge px-3 py-2 rounded-pill user-select-none" 
+                                          style="cursor: pointer; transition: all 0.2s ease;"
+                                          [ngClass]="equipo.estatus === 1 ? 'bg-success text-white' : 'bg-danger text-white'"
+                                          (click)="cambiarEstatus(equipo.idTipoEquipo)"
+                                          title="Clic para cambiar estatus">
+                                        <i class="fa me-1" [ngClass]="equipo.estatus === 1 ? 'fa-check-circle' : 'fa-times-circle'"></i>
                                         {{ equipo.estatus === 1 ? 'Activo' : 'Inactivo' }}
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm text-primary me-2"><i class="fa fa-pencil"></i></button>
-                                    <button class="btn btn-sm text-danger"><i class="fa fa-trash"></i></button>
+                                    <button class="btn btn-primary text-white me-2 px-3" title="Editar" (click)="abrirModalEditar(equipo)">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger text-white px-3" title="Eliminar">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
+                            <!-- Mensaje si no hay resultados en el filtro -->
+                            <tr *ngIf="tiposEquipoFiltrados.length === 0">
+                                <td colspan="4" class="text-center py-4 text-muted">
+                                    <i class="fa fa-info-circle me-2"></i> No se encontraron registros con este filtro.
+                                </td>
+                            <!-- </tr>
                             <tr *ngIf="tiposEquipo.length === 0">
                                 <td colspan="4" class="text-center py-4 text-muted">Cargando registros...</td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
@@ -183,6 +209,36 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- ========================================== -->
+    <!-- MODAL DE EDICIÓN (TIPO DE EQUIPO) -->
+    <!-- ========================================== -->
+    <div *ngIf="mostrarModalEditar" class="modal-backdrop fade show"></div>
+    <div class="modal fade" [class.show]="mostrarModalEditar" [style.display]="mostrarModalEditar ? 'block' : 'none'" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white border-bottom-0">
+                    <h5 class="modal-title fw-bold"><i class="fa fa-edit me-2"></i>Editar Tipo de Equipo</h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="cerrarModalEditar()"></button>
+                </div>
+                
+                <div class="modal-body px-4 py-4">
+                    <form [formGroup]="formEditar">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-dark">Descripción</label>
+                            <input type="text" class="form-control bg-light" formControlName="descripcion" 
+                                   [ngClass]="{'is-invalid': formEditar.get('descripcion')?.invalid && formEditar.get('descripcion')?.touched}"
+                                   placeholder="Ej. Cómputo, Impresión...">
+                            <div class="invalid-feedback">La descripción es obligatoria.</div>
+                        </div>
+                    </form>
+                </div>
 
+                <div class="modal-footer border-0 bg-light d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-secondary px-4 fw-semibold" (click)="cerrarModalEditar()">Cancelar</button>
+                    <button type="button" class="btn btn-primary px-4 fw-semibold text-white shadow-sm" (click)="guardarEdicion()">Guardar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -135,6 +135,11 @@
                             <option *ngFor="let tRef of tiposRefacciones" [value]="tRef.idTipoRefaccion">{{ tRef.descripcion }}</option>
                         </select>
                     </div>
+                    <div class="col-md-6">
+                         <label class="form-label small fw-semibold">Inventario de refacción</label>
+                         <input type="text" class="form-control bg-light" formControlName="refaccionInventario" maxlength="18" placeholder="Ej. 5151000138-00000">
+                    </div>
+                    
                     <div class="col-12">
                         <label class="form-label small fw-semibold">Descripción de la reparación <span class="text-danger">*</span></label>
                         <textarea class="form-control bg-light" rows="3" formControlName="descripcionReporte" maxlength="200" placeholder="Describe el problema o la falla del equipo..." [ngClass]="{'is-invalid': formReparacion.get('descripcionReporte')?.invalid && formReparacion.get('descripcionReporte')?.touched}"></textarea>
