@@ -50,7 +50,12 @@ export class LoginComponent {
       username: this.username(),
       password: this.password()
     }).subscribe({
-      next: (res) => {
+      next: (res: any) => {
+        // Guardamos el usuario en LocalStorage
+        // Guardaremos el "username" que el usuario acaba de teclear.
+        const usernameMenu = res?.nombre || this.username(); 
+        localStorage.setItem('usuarioSistema', usernameMenu);
+
         this.snackBar.open('¡Bienvenido al sistema!', 'Cerrar', { duration: 3000 });
         this.router.navigate(['/dashboard']); // Ruta después de pasar el login
       },

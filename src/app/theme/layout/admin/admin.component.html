@@ -6,9 +6,61 @@
       <h4 class="m-0 fw-bold">Control de Reparaciones</h4>
     </div>
 
-    <button mat-button class="text-white" (click)="cerrarSesion()">
-      <i class="fa fa-sign-out-alt me-2"></i> Cerrar Sesión
-    </button>
+    <!-- Menú de usuario desplegable -->
+    <div class="position-relative">
+      
+      <!-- Botón tipo píldora con el avatar y el nombre -->
+      <button 
+        class="btn btn-primary text-white d-flex align-items-center gap-2 border-0 shadow-none px-3 py-1 rounded-pill" 
+        style="background-color: rgba(255, 255, 255, 0.15);"
+        (click)="menuPerfilAbierto = !menuPerfilAbierto">
+        
+        <!-- Ícono de avatar -->
+        <div class="d-flex justify-content-center align-items-center bg-white text-primary rounded-circle shadow-sm" style="width: 32px; height: 32px;">
+            <i class="fa fa-user"></i>
+        </div>
+        
+        <!-- Nombre de usuario -->
+        <span class="fw-semibold" style="letter-spacing: 0.3px;">{{ nombreUsuario }}</span>
+        
+        <!-- Flecha de despliegue -->
+        <i class="fa ms-1" [ngClass]="menuPerfilAbierto ? 'fa-chevron-up' : 'fa-chevron-down'" style="font-size: 0.8rem;"></i>
+      </button>
+
+      <!-- Tarjeta flotante -->
+      <div 
+        class="dropdown-menu dropdown-menu-end shadow mt-2" 
+        [class.show]="menuPerfilAbierto" 
+        [style.display]="menuPerfilAbierto ? 'block' : 'none'"
+        style="position: absolute; right: 0; min-width: 220px; z-index: 1050;">
+        
+        <!-- Información extra del usuario -->
+        <div class="px-4 py-3 border-bottom bg-light rounded-top text-center">
+          <!-- Hacemos el avatar más grande adentro del menú -->
+          <!-- <div class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle mb-2 shadow-sm" style="width: 48px; height: 48px;">
+            <i class="fa fa-user fs-4"></i>
+          </div> -->
+          <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">SESIÓN INICIADA</small>
+          <span class="fw-bold text-dark fs-6">{{ nombreUsuario }}</span>
+        </div>
+        
+        <!-- Opciones del menú -->
+        <div class="py-2">
+          <button class="dropdown-item py-2 text-danger fw-semibold d-flex align-items-center" (click)="cerrarSesion()">
+            <i class="fa fa-sign-out-alt me-3 fs-5"></i> Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fondo invisible para cerrar el menú al hacer clic fuera de él -->
+    <div 
+      *ngIf="menuPerfilAbierto" 
+      class="position-fixed top-0 start-0 w-100 h-100" 
+      style="z-index: 1040;" 
+      (click)="menuPerfilAbierto = false">
+    </div>
+
   </header>
 
   <div class="d-flex">
