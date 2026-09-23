@@ -1,247 +1,250 @@
 <div class="card shadow mb-4 mt-4 mx-3"> 
-    <!-- Encabezado -->
-    <div
-        class="card-header d-flex flex-row align-items-center justify-content-between bg-light py-3 border-bottom-0">
+    <!-- Encabezado y Botón (Se quedan igual) -->
+    <div class="card-header d-flex flex-row align-items-center justify-content-between bg-light py-3 border-bottom-0">
         <h5 class="m-0 fw-bold text-primary">Administración de catálogos</h5>
         <span class="text-primary fw-bold fs-5">Administración / Catálogos</span>
     </div>
 
     <!-- Cuerpo -->
-    <div class="card-body" style="background-color: #e5e5e5;">    
-        <!-- Botón de botónes -->
+    <div class="card-body" style="background-color: #e5e5e5;"> 
+        <!-- Barra de botónes -->   
         <div class="mb-4">
             <!-- Botón de regresar -->
-            <button
-                type="button"
-                class="btn btn-outline-warning px-3 py-2 fw-semibold me-2"
-                style="border-radius: 4px;"
-                onclick="window.location.href='/dashboard'">
+            <button type="button" class="btn btn-outline-warning px-3 py-2 fw-semibold me-2" style="border-radius: 4px;" onclick="window.location.href='/dashboard'">
                 <i class="fa fa-file-alt me-2"></i> Regresar
             </button>
-
         </div>
 
         <!-- Información -->
-        <div
-            class="alert rounded-0 mb-4 px-4 py-3 d-flex align-items-center"
-            style="
-                background-color: #8ce1f6;
-                border: none;
-                border-bottom: 2px solid #5ab0c5;
-            ">
+        <div class="alert rounded-0 mb-4 px-4 py-3 d-flex align-items-center" style="background-color: #8ce1f6; border: none; border-bottom: 2px solid #5ab0c5;">
             <div>
                 <h4 class="mb-1 text-dark">Catálogos</h4>
                 <p class="mb-0 text-dark">
-                <i class="fa fa-search me-1"></i>
-                <strong>Administra</strong>
-                los catálogos del sistema, como equipos, marcas, modelos y sus estatus.
+                <i class="fa fa-search me-1"></i> <strong>Administra</strong> los catálogos del sistema, como equipos, marcas, modelos y sus estatus.
                 </p>
             </div>
         </div>
 
         <!-- CUADRÍCULA DE TARJETAS DE NAVEGACIÓN -->
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3 mb-5">
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 mb-5">
             
             <!-- 1. Tipos de Equipo -->
             <div class="col">
-                <div class="card h-100 border-primary text-center py-3" style="background-color: #f0f7ff; cursor: pointer;">
-                    <i class="fa fa-desktop fa-2x text-primary mb-2"></i>
-                    <h6 class="fw-bold mb-1 text-primary">Tipos de equipo</h6>
-                    <small class="text-muted d-block mb-3 px-2" style="font-size: 0.75rem;">Categorías principales de equipos</small>
-                    <div><span class="badge bg-primary text-white rounded-pill px-3">{{ tiposEquipo.length }} registros</span></div>
+                <div class="card h-100 text-center py-3 shadow-sm" style="cursor: pointer; transition: all 0.2s ease;"
+                     [style.background-color]="catalogoActivo === 'equipos' ? '#e6f4ea' : '#ffffff'"
+                     [style.border]="catalogoActivo === 'equipos' ? '2px solid #28a745' : '1px solid #e0e0e0'"
+                     (click)="cambiarCatalogo('equipos')">
+                    <i class="fa fa-desktop fa-2x mb-2" [ngStyle]="{'color': catalogoActivo === 'equipos' ? '#1e7e34' : '#6c757d'}"></i>
+                    <h6 class="fw-bold mb-1" [ngStyle]="{'color': catalogoActivo === 'equipos' ? '#1e7e34' : '#212529'}">Tipos de equipo</h6>
+                    <small class="text-muted d-block px-2" style="font-size: 0.75rem;">Categorías principales</small>
                 </div>
             </div>
 
             <!-- 2. Marcas -->
             <div class="col">
-                <div class="card h-100 border-light text-center py-3 shadow-sm" style="cursor: pointer;">
-                    <i class="fa fa-tags fa-2x text-secondary mb-2"></i>
-                    <h6 class="fw-bold mb-1 text-dark">Marcas</h6>
-                    <small class="text-muted d-block mb-3 px-2" style="font-size: 0.75rem;">Fabricantes de equipos</small>
-                    <div><span class="badge bg-light text-success border border-success rounded-pill px-3">24 registros</span></div>
+                <div class="card h-100 text-center py-3 shadow-sm" style="cursor: pointer; transition: all 0.2s ease;"
+                     [style.background-color]="catalogoActivo === 'marcas' ? '#e6f4ea' : '#ffffff'"
+                     [style.border]="catalogoActivo === 'marcas' ? '2px solid #28a745' : '1px solid #e0e0e0'"
+                     (click)="cambiarCatalogo('marcas')">
+                    <i class="fa fa-tags fa-2x mb-2" [ngStyle]="{'color': catalogoActivo === 'marcas' ? '#1e7e34' : '#6c757d'}"></i>
+                    <h6 class="fw-bold mb-1" [ngStyle]="{'color': catalogoActivo === 'marcas' ? '#1e7e34' : '#212529'}">Marcas</h6>
+                    <small class="text-muted d-block px-2" style="font-size: 0.75rem;">Fabricantes de equipos</small>
                 </div>
             </div>
 
             <!-- 3. Modelos -->
             <div class="col">
-                <div class="card h-100 border-light text-center py-3 shadow-sm" style="cursor: pointer;">
-                    <i class="fa fa-cubes fa-2x text-secondary mb-2"></i>
-                    <h6 class="fw-bold mb-1 text-dark">Modelos</h6>
-                    <small class="text-muted d-block mb-3 px-2" style="font-size: 0.75rem;">Modelos por marca</small>
-                    <div><span class="badge bg-light text-primary border border-primary rounded-pill px-3">56 registros</span></div>
+                <div class="card h-100 text-center py-3 shadow-sm" style="cursor: pointer; transition: all 0.2s ease;"
+                     [style.background-color]="catalogoActivo === 'modelos' ? '#e6f4ea' : '#ffffff'"
+                     [style.border]="catalogoActivo === 'modelos' ? '2px solid #28a745' : '1px solid #e0e0e0'"
+                     (click)="cambiarCatalogo('modelos')">
+                    <i class="fa fa-cubes fa-2x mb-2" [ngStyle]="{'color': catalogoActivo === 'modelos' ? '#1e7e34' : '#6c757d'}"></i>
+                    <h6 class="fw-bold mb-1" [ngStyle]="{'color': catalogoActivo === 'modelos' ? '#1e7e34' : '#212529'}">Modelos</h6>
+                    <small class="text-muted d-block px-2" style="font-size: 0.75rem;">Modelos por marca</small>
                 </div>
             </div>
 
             <!-- 4. Refacciones -->
             <div class="col">
-                <div class="card h-100 border-light text-center py-3 shadow-sm" style="cursor: pointer;">
-                    <i class="fa fa-cogs fa-2x text-secondary mb-2"></i>
-                    <h6 class="fw-bold mb-1 text-dark">Refacciones</h6>
-                    <small class="text-muted d-block mb-3 px-2" style="font-size: 0.75rem;">Componentes y piezas</small>
-                    <div><span class="badge bg-light text-warning border border-warning rounded-pill px-3 text-dark">120 registros</span></div>
+                <div class="card h-100 text-center py-3 shadow-sm" style="cursor: pointer; transition: all 0.2s ease;"
+                     [style.background-color]="catalogoActivo === 'refacciones' ? '#e6f4ea' : '#ffffff'"
+                     [style.border]="catalogoActivo === 'refacciones' ? '2px solid #28a745' : '1px solid #e0e0e0'"
+                     (click)="cambiarCatalogo('refacciones')">
+                    <i class="fa fa-cogs fa-2x mb-2" [ngStyle]="{'color': catalogoActivo === 'refacciones' ? '#1e7e34' : '#6c757d'}"></i>
+                    <h6 class="fw-bold mb-1" [ngStyle]="{'color': catalogoActivo === 'refacciones' ? '#1e7e34' : '#212529'}">Refacciones</h6>
+                    <small class="text-muted d-block px-2" style="font-size: 0.75rem;">Componentes y piezas</small>
                 </div>
             </div>
 
-            <!-- 5. Tipos de refacción -->
+            <!-- 5. Consumibles (Pendiente) -->
             <div class="col">
-                <div class="card h-100 border-light text-center py-3 shadow-sm" style="cursor: pointer;">
+                <div class="card h-100 text-center py-3 shadow-sm opacity-50" style="cursor: not-allowed; background-color: #ffffff; border: 1px solid #e0e0e0;">
                     <i class="fa fa-list-alt fa-2x text-secondary mb-2"></i>
-                    <h6 class="fw-bold mb-1 text-dark">Tipos de refacción</h6>
-                    <small class="text-muted d-block mb-3 px-2" style="font-size: 0.75rem;">Clasificación de refacciones</small>
-                    <div><span class="badge bg-light text-info border border-info rounded-pill px-3 text-dark">12 registros</span></div>
-                </div>
-            </div>
-
-            <!-- 6. Áreas -->
-            <div class="col">
-                <div class="card h-100 border-light text-center py-3 shadow-sm" style="cursor: pointer;">
-                    <i class="fa fa-users fa-2x text-secondary mb-2"></i>
-                    <h6 class="fw-bold mb-1 text-dark">Áreas</h6>
-                    <small class="text-muted d-block mb-3 px-2" style="font-size: 0.75rem;">Áreas responsables</small>
-                    <div><span class="badge bg-light text-danger border border-danger rounded-pill px-3">10 registros</span></div>
+                    <h6 class="fw-bold mb-1 text-dark">Consumibles</h6>
+                    <small class="text-muted d-block px-2" style="font-size: 0.75rem;">Artículos de consumo</small>
                 </div>
             </div>
         </div>
 
-        <!-- SECCIÓN DE LA TABLA: TIPOS DE EQUIPO -->
+        <!-- SECCIÓN DE LA TABLA DINÁMICA -->
         <div class="card border-0 shadow-sm rounded-3 bg-light">
             <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center rounded-top">
                 <div class="d-flex align-items-center">
                     <div class="bg-primary text-white rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="fa fa-desktop"></i>
+                        <i class="fa fa-table"></i>
                     </div>
                     <div>
-                        <h5 class="m-0 fw-bold text-dark">Tipos de equipo</h5>
-                        <small class="text-muted">Lista de tipos de equipo registrados en el sistema.</small>
+                        <h5 class="m-0 fw-bold text-dark">{{ titulos[catalogoActivo].titulo }}</h5>
+                        <small class="text-muted">{{ titulos[catalogoActivo].subtitulo }}</small>
                     </div>
                 </div>
-                <button class="btn btn-primary px-4 fw-semibold rounded-pill shadow-sm">
-                    <i class="fa fa-plus me-1"></i> Agregar tipo de equipo
+                <!-- Botón para agregar registro en los catálogos-->
+                <button class="btn btn-primary px-4 fw-semibold rounded-pill shadow-sm" (click)="abrirModalCrear()">
+                    <i class="fa fa-plus me-1"></i> Agregar registro
                 </button>
+                <!-- <button class="btn btn-primary px-4 fw-semibold rounded-pill shadow-sm">
+                    <i class="fa fa-plus me-1"></i> Agregar registro
+                </button> -->
             </div>
 
             <div class="card-body bg-white rounded-bottom">
-                <!-- Controles de tabla -->
                 <div class="d-flex justify-content-between mb-3">
                     <div class="input-group" style="width: 300px;">
                         <span class="input-group-text bg-white text-muted border-end-0"><i class="fa fa-search"></i></span>
-                        <input type="text" class="form-control border-start-0 ps-0" placeholder="Buscar tipo de equipo...">
+                        <input type="text" class="form-control border-start-0 ps-0" placeholder="Buscar descripción..." 
+                               [(ngModel)]="terminoBusqueda" (keyup)="aplicarFiltros()">
                     </div>
-                    <!-- Filtro de Estado -->
                     <div>
                         <label class="small text-muted me-2">Estado</label>
-                        <select class="form-select form-select-sm d-inline-block w-auto"
-                                [(ngModel)]="filtroEstado" 
-                                (change)="aplicarFiltros()">
+                        <select class="form-select form-select-sm d-inline-block w-auto" [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
                             <option value="Todos">Todos</option>
                             <option value="Activos">Activos</option>
                             <option value="Inactivos">Inactivos</option>
                         </select>
                     </div>
-                    <!-- <div>
-                        <label class="small text-muted me-2">Estado</label>
-                        <select class="form-select form-select-sm d-inline-block w-auto">
-                            <option>Todos</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
-                        </select>
-                    </div> -->
                 </div>
 
-                <!-- Tabla -->
+                <!-- Tabla Dinámica -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th class="text-secondary fw-semibold">ID</th>
                                 <th class="text-secondary fw-semibold">Descripción</th>
+                                <!-- Columnas relacionales dinámicas -->
+                                <th *ngIf="catalogoActivo === 'modelos'" class="text-secondary fw-semibold">Marca</th>
+                                <th *ngIf="catalogoActivo !== 'equipos'" class="text-secondary fw-semibold">Tipo de Equipo</th>
+                                
                                 <th class="text-secondary fw-semibold">Estado</th>
                                 <th class="text-secondary fw-semibold text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let equipo of tiposEquipoFiltrados">
-                                <td class="fw-medium text-dark">{{ equipo.idTipoEquipo }}</td>
-                                <td>{{ equipo.descripcion }}</td>
+                            <tr *ngFor="let item of datosFiltrados">
+                                <td class="fw-medium text-dark">{{ obtenerId(item) }}</td>
+                                <td>{{ item.descripcion }}</td>
+                                
+                                <!-- Relaciones -->
+                                <td *ngIf="catalogoActivo === 'modelos'">{{ item.marca?.descripcion }}</td>
+                                <td *ngIf="catalogoActivo === 'modelos'">{{ item.marca?.tipoEquipo?.descripcion }}</td>
+                                <td *ngIf="catalogoActivo === 'marcas' || catalogoActivo === 'refacciones'">{{ item.tipoEquipo?.descripcion }}</td>
+
                                 <td>
-                                    <!-- Etiqueta de estado con colores sólidos -->
-                                    <span class="badge px-3 py-2 rounded-pill user-select-none" 
-                                          style="cursor: pointer; transition: all 0.2s ease;"
-                                          [ngClass]="equipo.estatus === 1 ? 'bg-success text-white' : 'bg-danger text-white'"
-                                          (click)="cambiarEstatus(equipo.idTipoEquipo)"
-                                          title="Clic para cambiar estatus">
-                                        <i class="fa me-1" [ngClass]="equipo.estatus === 1 ? 'fa-check-circle' : 'fa-times-circle'"></i>
-                                        {{ equipo.estatus === 1 ? 'Activo' : 'Inactivo' }}
+                                    <span class="badge px-3 py-2 rounded-pill user-select-none" style="cursor: pointer; transition: all 0.2s ease;"
+                                          [ngClass]="item.estatus === 1 ? 'bg-success text-white' : 'bg-danger text-white'"
+                                          (click)="cambiarEstatus(item)" title="Clic para cambiar estatus">
+                                        <i class="fa me-1" [ngClass]="item.estatus === 1 ? 'fa-check-circle' : 'fa-times-circle'"></i>
+                                        {{ item.estatus === 1 ? 'Activo' : 'Inactivo' }}
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-primary text-white me-2 px-3" title="Editar" (click)="abrirModalEditar(equipo)">
+                                    <button class="btn btn-primary text-white me-2 px-3" title="Editar" (click)="abrirModalEditar(item)">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-danger text-white px-3" title="Eliminar">
+                                    <button class="btn btn-danger text-white px-3" title="Eliminar" (click)="abrirModalEliminar(item)">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
-                            <!-- Mensaje si no hay resultados en el filtro -->
-                            <tr *ngIf="tiposEquipoFiltrados.length === 0">
-                                <td colspan="4" class="text-center py-4 text-muted">
-                                    <i class="fa fa-info-circle me-2"></i> No se encontraron registros con este filtro.
+                            <tr *ngIf="datosFiltrados.length === 0">
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    <i class="fa fa-info-circle me-2"></i> No se encontraron registros.
                                 </td>
-                            <!-- </tr>
-                            <tr *ngIf="tiposEquipo.length === 0">
-                                <td colspan="4" class="text-center py-4 text-muted">Cargando registros...</td>
-                            </tr> -->
+                            </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Paginación -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <small class="text-muted">Mostrando 1 a {{ tiposEquipo.length }} de {{ tiposEquipo.length }} registros</small>
-                    <nav>
-                        <!-- <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item disabled"><a class="page-link" href="#"><i class="fa fa-chevron-left"></i></a></li>
-                            <li class="page-item active"><a class="page-link rounded-circle mx-1" href="#">1</a></li>
-                            <li class="page-item disabled"><a class="page-link" href="#"><i class="fa fa-chevron-right"></i></a></li>
-                        </ul> -->
-                    </nav>
+                    <small class="text-muted">Mostrando {{ datosFiltrados.length }} de {{ datosOriginales.length }} registros totales</small>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ========================================== -->
-    <!-- MODAL DE EDICIÓN (TIPO DE EQUIPO) -->
-    <!-- ========================================== -->
+
+    <!-- MODAL DE EDICIÓN DINÁMICO -->
     <div *ngIf="mostrarModalEditar" class="modal-backdrop fade show"></div>
     <div class="modal fade" [class.show]="mostrarModalEditar" [style.display]="mostrarModalEditar ? 'block' : 'none'" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-primary text-white border-bottom-0">
-                    <h5 class="modal-title fw-bold"><i class="fa fa-edit me-2"></i>Editar Tipo de Equipo</h5>
+                    <!-- El título cambia dinámicamente -->
+                    <h5 class="modal-title fw-bold">
+                            <i class="fa me-2" [ngClass]="itemSeleccionadoId ? 'fa-edit' : 'fa-plus-circle'"></i>
+                            {{ itemSeleccionadoId ? 'Editar' : 'Agregar' }} {{ titulos[catalogoActivo].titulo }}
+                    </h5>
                     <button type="button" class="btn-close btn-close-white" (click)="cerrarModalEditar()"></button>
                 </div>
+                <!-- <div class="modal-header bg-primary text-white border-bottom-0">
+                    <h5 class="modal-title fw-bold"><i class="fa fa-edit me-2"></i>Editar {{ titulos[catalogoActivo].titulo }}</h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="cerrarModalEditar()"></button>
+                </div> -->
                 
                 <div class="modal-body px-4 py-4">
                     <form [formGroup]="formEditar">
+                        <!-- Campo Común: Descripción -->
                         <div class="mb-3">
                             <label class="form-label small fw-bold text-dark">Descripción</label>
                             <input type="text" class="form-control bg-light" formControlName="descripcion" 
-                                   [ngClass]="{'is-invalid': formEditar.get('descripcion')?.invalid && formEditar.get('descripcion')?.touched}"
-                                   placeholder="Ej. Cómputo, Impresión...">
-                            <div class="invalid-feedback">La descripción es obligatoria.</div>
+                                   [ngClass]="{'is-invalid': formEditar.get('descripcion')?.invalid && formEditar.get('descripcion')?.touched}">
+                        </div>
+
+                        <!-- Campo para Marcas, Modelos y Refacciones -->
+                        <div class="mb-3" *ngIf="catalogoActivo !== 'equipos'">
+                            <label class="form-label small fw-bold text-dark">Tipo de equipo</label>
+                            <select class="form-select bg-light" formControlName="idTipoEquipo" (change)="onTipoEquipoChangeModal()"
+                                    [ngClass]="{'is-invalid': formEditar.get('idTipoEquipo')?.invalid && formEditar.get('idTipoEquipo')?.touched}">
+                                <option [ngValue]="null">Seleccione...</option>
+                                <option *ngFor="let eq of tiposEquipoList" [value]="eq.idTipoEquipo">{{ eq.descripcion }}</option>
+                            </select>
+                        </div>
+
+                        <!-- Campo exclusivo para Modelos -->
+                        <div class="mb-3" *ngIf="catalogoActivo === 'modelos'">
+                            <label class="form-label small fw-bold text-dark">Marca</label>
+                            <select class="form-select bg-light" formControlName="idMarca"
+                                    [ngClass]="{'is-invalid': formEditar.get('idMarca')?.invalid && formEditar.get('idMarca')?.touched}">
+                                <option [ngValue]="null">Seleccione...</option>
+                                <option *ngFor="let marca of marcasList" [value]="marca.idMarca">{{ marca.descripcion }}</option>
+                            </select>
                         </div>
                     </form>
                 </div>
 
                 <div class="modal-footer border-0 bg-light d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-secondary px-4 fw-semibold" (click)="cerrarModalEditar()">Cancelar</button>
-                    <button type="button" class="btn btn-primary px-4 fw-semibold text-white shadow-sm" (click)="guardarEdicion()">Guardar</button>
+                    <button type="button" class="btn btn-secondary px-4 fw-semibold" (click)="cerrarModalEditar()" [disabled]="guardando">Cancelar</button>
+                    
+                    <button type="button" class="btn btn-primary px-4 fw-semibold text-white shadow-sm" 
+                            (click)="guardarEdicion()" [disabled]="guardando">
+                        <i class="fa fa-spinner fa-spin me-2" *ngIf="guardando"></i>
+                        {{ guardando ? 'Guardando...' : (itemSeleccionadoId ? 'Guardar Cambios' : 'Registrar') }}
+                    </button>
                 </div>
+                <!-- <div class="modal-footer border-0 bg-light d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-secondary px-4 fw-semibold" (click)="cerrarModalEditar()">Cancelar</button>
+                    <button type="button" class="btn btn-primary px-4 fw-semibold text-white shadow-sm" (click)="guardarEdicion()">Guardar Cambios</button>
+                </div> -->
             </div>
         </div>
-    </div>
-    <!-- ========================================== -->
-    <!-- FIN MODAL DE EDICIÓN (TIPO DE EQUIPO) -->
-    <!-- ========================================== -->
+    </div>        
 </div>
