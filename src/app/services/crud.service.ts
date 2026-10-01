@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CrudService {
 
-  private baseUrl: string = 'http://localhost:8080';
+  private baseUrl: string = environment.baseUrl;
 
   constructor(
     private http: HttpClient

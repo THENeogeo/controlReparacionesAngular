@@ -136,7 +136,7 @@
                                 <th *ngIf="catalogoActivo !== 'equipos'" class="text-secondary fw-semibold">Tipo de Equipo</th>
                                 
                                 <th class="text-secondary fw-semibold">Estado</th>
-                                <th class="text-secondary fw-semibold text-center">Acciones</th>
+                                <th class="text-secondary fw-semibold text-center">Editar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -161,9 +161,9 @@
                                     <button class="btn btn-primary text-white me-2 px-3" title="Editar" (click)="abrirModalEditar(item)">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-danger text-white px-3" title="Eliminar" (click)="abrirModalEliminar(item)">
+                                    <!-- <button class="btn btn-danger text-white px-3" title="Eliminar" (click)="abrirModalEliminar(item)">
                                         <i class="fa fa-trash"></i>
-                                    </button>
+                                    </button> -->
                                 </td>
                             </tr>
                             <tr *ngIf="datosFiltrados.length === 0">

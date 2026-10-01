@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-reparaciones-registradas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule],
   templateUrl: './reparaciones-registradas.component.html',
   styleUrl: './reparaciones-registradas.component.scss'
 })
@@ -24,6 +25,9 @@ export class ReparacionesRegistradasComponent implements OnInit {
   fechaInicio: string = '';
   fechaFin: string = '';
 
+  // Variables de paginación
+  paginaActual: number = 1;
+  tamanioPagina: number = 10;
 
   // Lista de reparaciones obtenidas desde el backend
   reparaciones: any[] = [];
@@ -37,7 +41,8 @@ export class ReparacionesRegistradasComponent implements OnInit {
   mostrarModalEditar: boolean = false;
 
   constructor(
-    private crudService: CrudService
+    private crudService: CrudService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +85,6 @@ export class ReparacionesRegistradasComponent implements OnInit {
         }
       });
   }
-
   // Enlista los registros de reparaciones
   listarReparaciones(): void {
     this.crudService
@@ -89,19 +93,15 @@ export class ReparacionesRegistradasComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
-          console.log(
-            'Reparaciones listadas:',
-            response
-          );
-
-          this.reparaciones = response || [];
+          let data = response || [];
+          
+          // NUEVO: Ordenamos el arreglo por idReparacion de forma ascendente
+          this.reparaciones = data.sort((a: any, b: any) => a.idReparacion - b.idReparacion);
+          
+          console.log('Reparaciones listadas y ordenadas:', this.reparaciones);
         },
         error: (error) => {
-          console.error(
-            'Error al listar las reparaciones:',
-            error
-          );
-
+          console.error('Error al listar las reparaciones:', error);
           this.reparaciones = [];
         }
       });
@@ -120,8 +120,12 @@ export class ReparacionesRegistradasComponent implements OnInit {
 
     this.crudService.get(endpoint).subscribe({
       next: (response: any) => {
-        console.log('Reparaciones filtradas:', response);
-        this.reparaciones = response || [];
+        let data = response || [];
+        
+        // NUEVO: También ordenamos los resultados cuando el usuario aplique un filtro
+        this.reparaciones = data.sort((a: any, b: any) => a.idReparacion - b.idReparacion);
+        
+        console.log('Reparaciones filtradas y ordenadas:', this.reparaciones);
       },
       error: (error) => {
         console.error('Error al filtrar las reparaciones:', error);
@@ -129,6 +133,55 @@ export class ReparacionesRegistradasComponent implements OnInit {
       }
     });
   }
+
+  // Enlista los registros de reparaciones
+  // listarReparaciones(): void {
+  //   this.crudService
+  //     .get(
+  //       'registro-reparacion/listarRegistrosDeReparacionDTO'
+  //     )
+  //     .subscribe({
+  //       next: (response: any) => {
+  //         console.log(
+  //           'Reparaciones listadas:',
+  //           response
+  //         );
+
+  //         this.reparaciones = response || [];
+  //       },
+  //       error: (error) => {
+  //         console.error(
+  //           'Error al listar las reparaciones:',
+  //           error
+  //         );
+
+  //         this.reparaciones = [];
+  //       }
+  //     });
+  // }
+
+  // Filtra las reparaciones según el rango de fechas seleccionado
+  // filtrarPorFechas(): void {
+  //   // Validamos que ambas fechas estén seleccionadas antes de consultar al backend
+  //   if (!this.fechaInicio || !this.fechaFin) {
+  //     console.warn('Debe seleccionar ambas fechas para filtrar.');
+  //     return;
+  //   }
+
+  //   // Armamos la URL concatenando los query parameters tal como los pide Swagger
+  //   const endpoint = `registro-reparacion/listarRegistroReparacionPorFechas?fechaInicio=${this.fechaInicio}&fechaFin=${this.fechaFin}`;
+
+  //   this.crudService.get(endpoint).subscribe({
+  //     next: (response: any) => {
+  //       console.log('Reparaciones filtradas:', response);
+  //       this.reparaciones = response || [];
+  //     },
+  //     error: (error) => {
+  //       console.error('Error al filtrar las reparaciones:', error);
+  //       this.reparaciones = [];
+  //     }
+  //   });
+  // }
 
   // Limpia los inputs y vuelve a cargar todos los registros
   limpiarFiltro(): void {
@@ -342,12 +395,105 @@ export class ReparacionesRegistradasComponent implements OnInit {
       });
   }
 
+  // --- ACTUALIZAR REGISTRO ---
   actualizarReparacion(): void {
+    if (!this.reparacionEditar) return;
+
+    const id = this.reparacionEditar.idReparacion;
+
+    const payload = {
+      idReparacion: id,
+      idTipoEquipo: this.reparacionEditar.idTipoEquipo ? Number(this.reparacionEditar.idTipoEquipo) : null,
+      idMarca: this.reparacionEditar.idMarca ? Number(this.reparacionEditar.idMarca) : null,
+      idModelo: this.reparacionEditar.idModelo ? Number(this.reparacionEditar.idModelo) : null,
+      inventario: this.reparacionEditar.inventario,
+      idRefaccion: this.reparacionEditar.idRefaccion ? Number(this.reparacionEditar.idRefaccion) : null,
+      idTipoRefaccion: this.reparacionEditar.idTipoRefaccion ? Number(this.reparacionEditar.idTipoRefaccion) : null,
+      refaccionInventario: this.reparacionEditar.refaccionInventario,
+      descripcionReporte: this.reparacionEditar.descripcionReporte,
+      expediente: this.reparacionEditar.expediente,
+      idArea: this.reparacionEditar.idArea ? Number(this.reparacionEditar.idArea) : null,
+      fechaRegistro: this.reparacionEditar.fechaRegistro
+    };
+
+    const endpoint = `registro-reparacion/editarRegistroReparacion/${id}`;
+
+    this.crudService.put(endpoint, payload).subscribe({
+      next: (response: any) => {
+        console.log('Reparación actualizada exitosamente:', response);
+        this.cerrarModalEditar();
+        this.listarReparaciones();
+        
+        // Notificación elegante de Angular Material
+        this.snackBar.open('¡Registro actualizado correctamente!', 'Cerrar', { 
+          duration: 3000, 
+          horizontalPosition: 'center', 
+          verticalPosition: 'bottom' 
+        });
+      },
+      error: (error: any) => {
+        if (error.status === 200) {
+          console.log('Reparación actualizada exitosamente (status 200)');
+          this.cerrarModalEditar();
+          this.listarReparaciones();
+          
+          // Notificación elegante de Angular Material (Falso error por texto plano)
+          this.snackBar.open('¡Registro actualizado correctamente!', 'Cerrar', { 
+            duration: 3000, 
+            horizontalPosition: 'center', 
+            verticalPosition: 'bottom' 
+          });
+        } else {
+          console.error('Error al actualizar la reparación:', error);
+          
+          // Notificación elegante de error
+          this.snackBar.open('Ocurrió un error al intentar actualizar el registro.', 'Cerrar', { 
+            duration: 3000, 
+            horizontalPosition: 'center', 
+            verticalPosition: 'bottom' 
+          });
+        }
+      }
+    });
   }
 
   cerrarModalEditar(): void {
     this.reparacionEditar = null;
     this.mostrarModalEditar = false;
+  }
+
+  // --- GETTERS PARA PAGINACIÓN ---
+  // Devuelve solo el "pedazo" de arreglo que corresponde a la página actual
+  get reparacionesPaginadas(): any[] {
+    const inicio = (this.paginaActual - 1) * this.tamanioPagina;
+    const fin = inicio + Number(this.tamanioPagina); // Convertimos a número por si viene como string del select
+    return this.reparaciones.slice(inicio, fin);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.reparaciones.length / this.tamanioPagina);
+  }
+
+  // Textos dinámicos para el pie de página ("Mostrando 1 al 10...")
+  get rangoInicio(): number {
+    if (this.reparaciones.length === 0) return 0;
+    return (this.paginaActual - 1) * this.tamanioPagina + 1;
+  }
+
+  get rangoFin(): number {
+    const fin = this.paginaActual * this.tamanioPagina;
+    return fin > this.reparaciones.length ? this.reparaciones.length : fin;
+  }
+
+  // --- MÉTODOS DE PAGINACIÓN ---
+  cambiarPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaActual = pagina;
+    }
+  }
+
+  onTamanioPaginaChange(): void {
+    this.paginaActual = 1; // Si el usuario cambia de 10 a 25 registros, lo regresamos a la página 1
   }
 
 }

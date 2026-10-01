@@ -50,7 +50,9 @@
       <div class="d-flex align-items-center gap-2">
         <span>Mostrar</span>
         <select
-          class="form-select form-select-sm d-inline-block w-auto">
+          class="form-select form-select-sm d-inline-block w-auto"
+          [(ngModel)]="tamanioPagina" 
+          (change)="onTamanioPaginaChange()">
           <option value="10">10</option>
           <option value="25">25</option>
           <option value="50">50</option>
@@ -178,7 +180,7 @@
         <!-- Registros -->
         <tbody>
           <tr
-            *ngFor="let reparacion of reparaciones">
+            *ngFor="let reparacion of reparacionesPaginadas">
             <!-- Folio -->
             <td class="text-center">
               {{
@@ -271,6 +273,34 @@
           </tr>
         </tbody>
       </table>
+      <!-- Controles de Paginación -->
+      <div class="d-flex justify-content-between align-items-center mt-3 px-2 text-dark">
+        <small class="text-muted">
+          Mostrando {{ rangoInicio }} al {{ rangoFin }} de {{ reparaciones.length }} registros totales
+        </small>
+        
+        <nav *ngIf="reparaciones.length > 0">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="paginaActual === 1">
+              <a class="page-link shadow-sm" style="cursor: pointer;" (click)="cambiarPagina(paginaActual - 1)">
+                <i class="fa fa-chevron-left me-1"></i> Anterior
+              </a>
+            </li>
+            
+            <li class="page-item disabled">
+              <span class="page-link fw-bold text-dark bg-light px-3">
+                Página {{ paginaActual }} de {{ totalPaginas }}
+              </span>
+            </li>
+            
+            <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+              <a class="page-link shadow-sm" style="cursor: pointer;" (click)="cambiarPagina(paginaActual + 1)">
+                Siguiente <i class="fa fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
     <!-- Fin de tabla -->
 
