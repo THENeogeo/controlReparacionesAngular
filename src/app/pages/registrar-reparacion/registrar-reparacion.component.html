@@ -159,15 +159,48 @@
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
+                        <label class="form-label small fw-semibold">No. de expediente</label>
+                        <div class="input-group shadow-sm">
+                            <input type="text" class="form-control bg-light" 
+                                   formControlName="expediente" 
+                                   maxlength="10" 
+                                   placeholder="Ej. 23706"
+                                   (blur)="buscarPorExpediente()"
+                                   (keyup.enter)="buscarPorExpediente()">
+                            <button class="btn btn-primary px-3" type="button" (click)="buscarPorExpediente()" title="Buscar trabajador">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.70rem;">Presiona Enter o el botón para buscar</small>
+                    </div>
+
+                    <!-- Área (Convertido a Input Readonly) -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Área <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" 
+                               style="background-color: #e9ecef; cursor: not-allowed;"
+                               formControlName="areaDescripcion" 
+                               placeholder="El área se llenará automáticamente..." 
+                               readonly
+                               [ngClass]="{'is-invalid': formReparacion.get('idArea')?.invalid && formReparacion.get('idArea')?.touched}">
+                    </div>
+
+                    <!-- <div class="col-md-6">
                         <label class="form-label small fw-semibold">Área <span class="text-danger">*</span></label>
                         <select class="form-select bg-light" formControlName="idArea" [ngClass]="{'is-invalid': formReparacion.get('idArea')?.invalid && formReparacion.get('idArea')?.touched}">
                             <option value="">Selecciona una opción</option>
                             <option *ngFor="let area of areas" [value]="area.idArea">{{ area.descripcion }}</option>
                         </select>
-                    </div>
-                    <div class="col-md-6">
+                    </div> -->
+                    <!-- <div class="col-md-6">
                         <label class="form-label small fw-semibold">No. de expediente</label>
                         <input type="text" class="form-control bg-light" formControlName="expediente" maxlength="5" placeholder="Ej. 23706">
+                    </div> -->
+    
+                    <!-- Nombre de usuario -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Nombre del usuario <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control bg-light" formControlName="nombreUsuario" maxlength="50" placeholder="El nombre se llenará automáticamente..." [ngClass]="{'is-invalid': formReparacion.get('nombreUsuario')?.invalid && formReparacion.get('nombreUsuario')?.touched}">  
                     </div>
                     <div class="col-md-6">
                         <label class="form-label small fw-semibold">Fecha de registro <span class="text-danger">*</span></label>

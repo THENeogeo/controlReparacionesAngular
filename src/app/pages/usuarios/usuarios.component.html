@@ -153,7 +153,7 @@
           <div class="modal-body px-4 py-3">
             <form [formGroup]="formAgregar">
               
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <label class="form-label small text-dark mb-1 fw-bold">Llenado por número de expediente</label>
                 <div class="input-group">
                   <input type="text" id="expediente" class="form-control" placeholder="Ingresar número de expediente" maxLength="5" oninput="this.value = this.value.replace(/\D/g, '').slice(0,5)">
@@ -184,6 +184,49 @@
                 <div class="col-md-4 mb-3">
                   <label class="form-label small mb-1">Apellido Materno</label>
                   <input formControlName="ap_materno" class="form-control" type="text" [ngClass]="{'is-invalid': formAgregar.get('ap_materno')?.invalid && formAgregar.get('ap_materno')?.touched}">
+                  <div class="invalid-feedback">El apellido materno es requerido.</div>
+                </div>
+              </div> -->
+              <!-- Buscador por Expediente -->
+              <div class="mb-4">
+                <label class="form-label small text-dark mb-1 fw-bold">Llenado por número de expediente</label>
+                <div class="input-group shadow-sm">
+                  <input type="text" class="form-control" 
+                         formControlName="expediente" 
+                         placeholder="Ej. 23706" 
+                         maxLength="5" 
+                         (keyup.enter)="buscarTrabajadorPorExpediente()"
+                         oninput="this.value = this.value.replace(/\D/g, '').slice(0,5)">
+                  <button type="button" class="btn btn-primary px-4" (click)="buscarTrabajadorPorExpediente()">
+                    <i class="fa-solid fa-search me-2"></i>Buscar
+                  </button>
+                </div>
+                <small class="text-muted" style="font-size: 0.75rem;">Presiona Enter o el botón para autocompletar la información</small>
+              </div>
+
+              <!-- Administrador -->
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" formControlName="isAdmin" id="adminCheck">
+                <label class="form-check-label small fw-bold" for="adminCheck">Usuario administrador</label>
+              </div>
+
+              <!-- Nombres (Bloqueados / Readonly) -->
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small mb-1">Nombre</label>
+                  <input formControlName="nombre" class="form-control" type="text" readonly style="background-color: #e9ecef; cursor: not-allowed;" [ngClass]="{'is-invalid': formAgregar.get('nombre')?.invalid && formAgregar.get('nombre')?.touched}">
+                  <div class="invalid-feedback">El nombre es requerido.</div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small mb-1">Apellido Paterno</label>
+                  <input formControlName="ap_paterno" class="form-control" type="text" readonly style="background-color: #e9ecef; cursor: not-allowed;" [ngClass]="{'is-invalid': formAgregar.get('ap_paterno')?.invalid && formAgregar.get('ap_paterno')?.touched}">
+                  <div class="invalid-feedback">El apellido paterno es requerido.</div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small mb-1">Apellido Materno</label>
+                  <input formControlName="ap_materno" class="form-control" type="text" readonly style="background-color: #e9ecef; cursor: not-allowed;" [ngClass]="{'is-invalid': formAgregar.get('ap_materno')?.invalid && formAgregar.get('ap_materno')?.touched}">
                   <div class="invalid-feedback">El apellido materno es requerido.</div>
                 </div>
               </div>

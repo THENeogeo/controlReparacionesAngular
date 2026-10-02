@@ -6,6 +6,7 @@ import { Usuario } from '../../models/usuario.model';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { CrudService } from '../../services/crud.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -23,6 +24,7 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 export class UsuariosComponent implements OnInit {
   
   private usuarioService = inject(UsuarioService);
+  private crudService = inject(CrudService);
   private dialog = inject(MatDialog);
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
@@ -61,9 +63,11 @@ export class UsuariosComponent implements OnInit {
 
   inicializarFormularios() {
     this.formAgregar = this.fb.group({
-      nombre: ['', Validators.required, Validators.maxLength(10)],
-      ap_paterno: ['', Validators.required, Validators.maxLength(10)],
-      ap_materno: ['', Validators.required, Validators.maxLength(10)],
+      expediente: [''], // <-- NUEVO
+      trabajador_id: [0], // <-- NUEVO (Para guardar la relación real)
+      nombre: ['', [Validators.required, Validators.maxLength(40)]],
+      ap_paterno: ['', [Validators.required, Validators.maxLength(40)]],
+      ap_materno: ['', [Validators.required, Validators.maxLength(40)]],
       usuario: ['', Validators.required, Validators.maxLength(10)],
       password: ['', [Validators.required, Validators.pattern('(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}')]]
     });
@@ -270,7 +274,40 @@ export class UsuariosComponent implements OnInit {
   }
 
   buscarTrabajadorPorExpediente() {
+    const expediente = this.formAgregar.get('expediente')?.value;
+    
+    if (!expediente) return;
 
+    this.snackBar.open('Buscando expediente...', '', { duration: 1500 });
+
+    this.crudService.get(`catalogos/buscarTrabajador/${expediente}`).subscribe({
+      next: (data: any) => {
+        
+        if (data && data.nombreDTO) {
+          
+          // Mapeo directo usando los nombres exactos que vimos en tu Network Tab
+          this.formAgregar.patchValue({
+            nombre: data.nombreDTO,
+            ap_paterno: data.paternoDTO,
+            ap_materno: data.maternoDTO,
+            trabajador_id: data.idPersonalDTO
+          });
+
+          this.snackBar.open('¡Trabajador encontrado!', 'Cerrar', { duration: 3000 });
+        } else {
+          this.snackBar.open('El trabajador no tiene nombre registrado.', 'Cerrar', { duration: 3000 });
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener trabajador:', error);
+        this.snackBar.open(`No se encontró el expediente ${expediente}`, 'Cerrar', { duration: 4000 });
+        
+        // Limpiamos los campos en caso de que no exista
+        this.formAgregar.patchValue({ 
+          nombre: '', ap_paterno: '', ap_materno: '', trabajador_id: 0 
+        });
+      }
+    });
   }
   
 }
