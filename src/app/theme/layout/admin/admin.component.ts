@@ -19,6 +19,7 @@ export class AdminComponent implements OnInit {
   menuAdminAbierto: boolean = false; // Controla si el menú lateral está abierto o cerrado
   menuSolicitudesAbierto: boolean = false;
   menuReportesAbierto: boolean = false;
+  menuConsumiblesAbierto: boolean = false;
 
   // Por ahora el componente está limpio.
   // Más adelante, aquí agregaremos la lógica para:

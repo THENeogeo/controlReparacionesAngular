@@ -72,46 +72,84 @@
           <a class="nav-link text-white" href="/dashboard">Inicio</a>
         </li>
 
-        <!-- Administración  -->
+        <!-- Reparaciones  -->
         <li class="nav-item">
           <a class="nav-link text-white d-flex justify-content-between align-items-center" 
             style="cursor: pointer;" 
             (click)="menuAdminAbierto = !menuAdminAbierto">
-            <span>Administración</span>
+            <span>Reparaciones</span>
             <i class="fa" [ngClass]="menuAdminAbierto ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
           </a>
-          
+
           <ul class="nav flex-column ms-3 mt-1" *ngIf="menuAdminAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/registrar-reparacion">Registrar reparación</a>
+            </li>
+          </ul>
+
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuAdminAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/reparaciones">Reparaciones</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Consumibles-->
+        <li class="nav-item">
+          <a class="nav-link text-white d-flex justify-content-between align-items-center" 
+            style="cursor: pointer;" 
+            (click)="menuConsumiblesAbierto = !menuConsumiblesAbierto">
+            <span>Consumibles</span>
+            <i class="fa" [ngClass]="menuConsumiblesAbierto ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          </a>
+
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuConsumiblesAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/registrar-consumible">Registrar consumible</a>
+            </li>
+          </ul>
+
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuConsumiblesAbierto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/consumibles">Consumibles</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Administración  -->
+        <li class="nav-item">
+          <a class="nav-link text-white d-flex justify-content-between align-items-center"
+            style="cursor: pointer;" 
+            (click)="menuSolicitudesAbierto = !menuSolicitudesAbierto">
+            <span>Administración</span>
+            <i class="fa menu-arrow" [ngClass]="menuSolicitudesAbierto ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          </a>
+          
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuSolicitudesAbierto">
             <li class="nav-item">
               <a class="nav-link text-white" href="/usuarios">Usuarios</a>
             </li>
           </ul>
 
-          <!-- <ul class="nav flex-column ms-3 mt-1" *ngIf="menuAdminAbierto">
-            <li class="nav-item">
-              <a class="nav-link text-white" href="/reparaciones">Reparaciones</a>
-            </li>
-          </ul> -->
-
-          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuAdminAbierto">
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuSolicitudesAbierto">
             <li class="nav-item">
               <a class="nav-link text-white" href="/catalogos-admin">Catálogos</a>
             </li>
           </ul>
         </li>
 
-        <!-- Solicitudes  -->
+        <!-- Reportes -->
         <li class="nav-item">
-          <a class="nav-link text-white d-flex justify-content-between align-items-center"
+          <a class="nav-link text-white d-flex justify-content-between align-items-center" 
             style="cursor: pointer;" 
-            (click)="menuSolicitudesAbierto = !menuSolicitudesAbierto">
+            (click)="menuReportesAbierto = !menuReportesAbierto">
             <span>Reportes</span>
-            <i class="fa menu-arrow" [ngClass]="menuSolicitudesAbierto ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            <i class="fa" [ngClass]="menuReportesAbierto ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
           </a>
-          
-          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuSolicitudesAbierto">
+
+          <ul class="nav flex-column ms-3 mt-1" *ngIf="menuReportesAbierto">
             <li class="nav-item">
-              <a class="nav-link text-white" href="/reparaciones">Reparaciones</a>
+              <a class="nav-link text-white" href="/reporte-reparaciones">Reporte de reparaciones</a>
             </li>
           </ul>
         </li>

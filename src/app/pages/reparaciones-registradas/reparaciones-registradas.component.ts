@@ -134,55 +134,6 @@ export class ReparacionesRegistradasComponent implements OnInit {
     });
   }
 
-  // Enlista los registros de reparaciones
-  // listarReparaciones(): void {
-  //   this.crudService
-  //     .get(
-  //       'registro-reparacion/listarRegistrosDeReparacionDTO'
-  //     )
-  //     .subscribe({
-  //       next: (response: any) => {
-  //         console.log(
-  //           'Reparaciones listadas:',
-  //           response
-  //         );
-
-  //         this.reparaciones = response || [];
-  //       },
-  //       error: (error) => {
-  //         console.error(
-  //           'Error al listar las reparaciones:',
-  //           error
-  //         );
-
-  //         this.reparaciones = [];
-  //       }
-  //     });
-  // }
-
-  // Filtra las reparaciones según el rango de fechas seleccionado
-  // filtrarPorFechas(): void {
-  //   // Validamos que ambas fechas estén seleccionadas antes de consultar al backend
-  //   if (!this.fechaInicio || !this.fechaFin) {
-  //     console.warn('Debe seleccionar ambas fechas para filtrar.');
-  //     return;
-  //   }
-
-  //   // Armamos la URL concatenando los query parameters tal como los pide Swagger
-  //   const endpoint = `registro-reparacion/listarRegistroReparacionPorFechas?fechaInicio=${this.fechaInicio}&fechaFin=${this.fechaFin}`;
-
-  //   this.crudService.get(endpoint).subscribe({
-  //     next: (response: any) => {
-  //       console.log('Reparaciones filtradas:', response);
-  //       this.reparaciones = response || [];
-  //     },
-  //     error: (error) => {
-  //       console.error('Error al filtrar las reparaciones:', error);
-  //       this.reparaciones = [];
-  //     }
-  //   });
-  // }
-
   // Limpia los inputs y vuelve a cargar todos los registros
   limpiarFiltro(): void {
     this.fechaInicio = '';
@@ -207,36 +158,34 @@ export class ReparacionesRegistradasComponent implements OnInit {
   // Elimina una reparación por su ID y actualiza la lista de reparaciones
   eliminarReparacion(): void {
     if (!this.reparacionSeleccionada) {
-      console.error(
-        'No hay una reparación seleccionada'
-      );
+      console.error('No hay una reparación seleccionada');
       return;
     }
 
     const id = this.reparacionSeleccionada.idReparacion;
 
     this.crudService
-      .delete(
-        `registro-reparacion/eliminarRegistroReparacion/${id}`
-      )
+      .delete(`registro-reparacion/eliminarRegistroReparacion/${id}`)
       .subscribe({
         next: (response: any) => {
-          console.log(
-            'Reparación eliminada:',
-            response
-          );
-
-          // Refrescar la lista
-          this.listarReparaciones();
-
-          // Limpiar selección y cerrar modal
-          this.limpiarReparacionSeleccionada(); 
+          console.log('Reparación eliminada:', response);
+          
+          this.limpiarReparacionSeleccionada(); // Cierra el modal
+          this.listarReparaciones(); // Recarga la tabla
+          this.snackBar.open('¡Registro eliminado correctamente!', 'Cerrar', { duration: 3000, horizontalPosition: 'center', verticalPosition: 'bottom' });
         },
         error: (error) => {
-          console.error(
-            'Error al eliminar la reparación:',
-            error
-          );
+          // Capturamos el falso error de texto plano validando el status 200 (OK)
+          if (error.status === 200) {
+            console.log('Reparación eliminada (Status 200)');
+            
+            this.limpiarReparacionSeleccionada(); // Cierra el modal
+            this.listarReparaciones(); // Recarga la tabla
+            this.snackBar.open('¡Registro eliminado correctamente!', 'Cerrar', { duration: 3000, horizontalPosition: 'center', verticalPosition: 'bottom' });
+          } else {
+            console.error('Error al eliminar la reparación:', error);
+            this.snackBar.open('Ocurrió un error al intentar eliminar el registro.', 'Cerrar', { duration: 3000, horizontalPosition: 'center', verticalPosition: 'bottom' });
+          }
         }
       });
   }

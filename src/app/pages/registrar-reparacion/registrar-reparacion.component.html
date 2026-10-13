@@ -122,14 +122,14 @@
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label small fw-semibold">Refacción</label>
+                        <label class="form-label small fw-semibold">Refacción <span class="text-danger">*</span></label>
                         <select class="form-select bg-light" formControlName="idRefaccion">
                             <option value="">Selecciona una opción</option>
                             <option *ngFor="let ref of refacciones" [value]="ref.idRefaccion">{{ ref.descripcion }}</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-semibold">Tipo de refacción</label>
+                        <label class="form-label small fw-semibold">Tipo de refacción <span class="text-danger">*</span></label>
                         <select class="form-select bg-light" formControlName="idTipoRefaccion">
                             <option value="">Selecciona una opción</option>
                             <option *ngFor="let tRef of tiposRefacciones" [value]="tRef.idTipoRefaccion">{{ tRef.descripcion }}</option>
@@ -159,7 +159,7 @@
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label small fw-semibold">No. de expediente</label>
+                        <label class="form-label small fw-semibold">Número de expediente <span class="text-danger">*</span></label>
                         <div class="input-group shadow-sm">
                             <input type="text" class="form-control bg-light" 
                                    formControlName="expediente" 
@@ -174,7 +174,7 @@
                         <small class="text-muted" style="font-size: 0.70rem;">Presiona Enter o el botón para buscar</small>
                     </div>
 
-                    <!-- Área (Convertido a Input Readonly) -->
+                    <!-- Área -->
                     <div class="col-md-6">
                         <label class="form-label small fw-semibold">Área <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" 
@@ -184,18 +184,6 @@
                                readonly
                                [ngClass]="{'is-invalid': formReparacion.get('idArea')?.invalid && formReparacion.get('idArea')?.touched}">
                     </div>
-
-                    <!-- <div class="col-md-6">
-                        <label class="form-label small fw-semibold">Área <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light" formControlName="idArea" [ngClass]="{'is-invalid': formReparacion.get('idArea')?.invalid && formReparacion.get('idArea')?.touched}">
-                            <option value="">Selecciona una opción</option>
-                            <option *ngFor="let area of areas" [value]="area.idArea">{{ area.descripcion }}</option>
-                        </select>
-                    </div> -->
-                    <!-- <div class="col-md-6">
-                        <label class="form-label small fw-semibold">No. de expediente</label>
-                        <input type="text" class="form-control bg-light" formControlName="expediente" maxlength="5" placeholder="Ej. 23706">
-                    </div> -->
     
                     <!-- Nombre de usuario -->
                     <div class="col-md-6">
