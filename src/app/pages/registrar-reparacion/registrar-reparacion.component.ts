@@ -116,46 +116,132 @@ export class RegistrarReparacionComponent implements OnInit {
 
     this.snackBar.open('Buscando expediente...', '', { duration: 1500 });
 
+    // Hacemos una única petición al servicio del trabajador 
     this.crudService.get(`catalogos/buscarTrabajador/${expediente}`).subscribe({
       next: (dataPersonal: any) => {
+        
         if (dataPersonal && dataPersonal.nombreDTO) {
           
+          // Armamos el nombre y lo pintamos visualmente 
           const nombreCompleto = `${dataPersonal.nombreDTO} ${dataPersonal.paternoDTO || ''} ${dataPersonal.maternoDTO || ''}`.trim();
           this.formReparacion.patchValue({ nombreUsuario: nombreCompleto });
 
-          if (dataPersonal.idPersonalDTO) {
-            this.crudService.get(`catalogos/buscarAreaTrabajador/${dataPersonal.idPersonalDTO}`).subscribe({
-              next: (dataArea: any) => {
-                
-                if (dataArea && dataArea.idAreaDTO) {
-                  // AQUI LA MAGIA: Guardamos el ID para Java y mostramos el texto para el usuario
-                  this.formReparacion.patchValue({ 
-                    idArea: dataArea.idAreaDTO,
-                    areaDescripcion: dataArea.areaDTO 
-                  });
-                  this.snackBar.open('¡Trabajador y Área asignados correctamente!', 'Cerrar', { duration: 3000 });
-                } else {
-                  this.snackBar.open('Trabajador encontrado (Área no asignada)', 'Cerrar', { duration: 3000 });
-                }
+          // Extraemos el texto del área externa 
+          const nombreAreaExterna = dataPersonal.areaDTO;
 
-              },
-              error: (errArea) => {
-                console.error('Error al obtener el área:', errArea);
-                this.snackBar.open('Trabajador encontrado (No se pudo cargar el área)', 'Cerrar', { duration: 3000 });
-              }
-            });
+          if (nombreAreaExterna) {
+            
+            // Buscamos si esa área ya existe en nuestro catálogo local
+            const areaLocal = this.areas.find(a => 
+              a.descripcion?.trim().toLowerCase() === nombreAreaExterna.trim().toLowerCase()
+            );
+
+            if (areaLocal) {
+              // --- CASO A: EL ÁREA YA EXISTE LOCALMENTE ---
+              this.formReparacion.patchValue({ 
+                idArea: areaLocal.idArea,       // Guardamos el ID interno correcto (Ej. 2)
+                areaDescripcion: areaLocal.descripcion // Pintamos el texto para el usuario
+              });
+              this.snackBar.open('¡Expediente cargado y Área local asignada!', 'Cerrar', { duration: 3000 });
+            
+            } else {
+              // --- CASO B: EL ÁREA NO EXISTE, HAY QUE CREARLA ---
+              this.snackBar.open('Nueva área detectada. Registrando en catálogo...', '', { duration: 2500 });
+
+              this.crudService.post('catalogos/areas/agregarArea', nombreAreaExterna).subscribe({
+                next: () => this.recargarAreasYAsignar(nombreAreaExterna),
+                error: (errArea) => {
+                  // Falso error de Angular por recibir String en lugar de JSON desde Spring Boot
+                  if (errArea.status === 200) {
+                    this.recargarAreasYAsignar(nombreAreaExterna);
+                  } else {
+                    console.error('Error al agregar nueva área:', errArea);
+                    this.snackBar.open('Trabajador encontrado, pero falló el registro del área.', 'Cerrar', { duration: 3500 });
+                  }
+                }
+              });
+            }
+          } else {
+            this.snackBar.open('Trabajador encontrado', 'Cerrar', { duration: 3000 });
           }
         }
       },
       error: (error) => {
         console.error('Error al obtener trabajador:', error);
         this.snackBar.open(`No se encontró el expediente ${expediente}`, 'Cerrar', { duration: 4000 });
-        
-        // Limpiamos los campos visuales y ocultos si hay error
+        // Limpiamos todo si el expediente no existe
         this.formReparacion.patchValue({ nombreUsuario: '', idArea: '', areaDescripcion: '' });
       }
     });
   }
+
+  // --- MÉTODO AUXILIAR PARA RECARGAR EL CATÁLOGO DESPUÉS DE INSERTAR ---
+  recargarAreasYAsignar(nombreNuevaArea: string): void {
+    // Volvemos a consultar todas las áreas para traer la recién creada junto con su nuevo ID
+    this.crudService.get('catalogos/areas/listarAreas').subscribe({
+      next: (resAreas: any[]) => {
+        this.areas = resAreas || [];
+        
+        // Buscamos la que acabamos de insertar
+        const areaRecienCreada = this.areas.find(a => a.descripcion?.trim().toLowerCase() === nombreNuevaArea.trim().toLowerCase());
+        
+        if (areaRecienCreada) {
+          this.formReparacion.patchValue({ 
+            idArea: areaRecienCreada.idArea, 
+            areaDescripcion: areaRecienCreada.descripcion 
+          });
+          this.snackBar.open('¡Expediente cargado y nueva área guardada!', 'Cerrar', { duration: 3000 });
+        }
+      }
+    });
+  }
+  // buscarPorExpediente(): void {
+  //   const expediente = this.formReparacion.get('expediente')?.value;
+    
+  //   if (!expediente) return; 
+
+  //   this.snackBar.open('Buscando expediente...', '', { duration: 1500 });
+
+  //   this.crudService.get(`catalogos/buscarTrabajador/${expediente}`).subscribe({
+  //     next: (dataPersonal: any) => {
+  //       if (dataPersonal && dataPersonal.nombreDTO) {
+          
+  //         const nombreCompleto = `${dataPersonal.nombreDTO} ${dataPersonal.paternoDTO || ''} ${dataPersonal.maternoDTO || ''}`.trim();
+  //         this.formReparacion.patchValue({ nombreUsuario: nombreCompleto });
+
+  //         if (dataPersonal.idPersonalDTO) {
+  //           this.crudService.get(`catalogos/buscarAreaTrabajador/${dataPersonal.idPersonalDTO}`).subscribe({
+  //             next: (dataArea: any) => {
+                
+  //               if (dataArea && dataArea.idAreaDTO) {
+  //                 // Guardamos el ID para Java y mostramos el texto para el usuario
+  //                 this.formReparacion.patchValue({ 
+  //                   idArea: dataArea.idAreaDTO,
+  //                   areaDescripcion: dataArea.areaDTO 
+  //                 });
+  //                 this.snackBar.open('¡Trabajador y Área asignados correctamente!', 'Cerrar', { duration: 3000 });
+  //               } else {
+  //                 this.snackBar.open('Trabajador encontrado (Área no asignada)', 'Cerrar', { duration: 3000 });
+  //               }
+
+  //             },
+  //             error: (errArea) => {
+  //               console.error('Error al obtener el área:', errArea);
+  //               this.snackBar.open('Trabajador encontrado (No se pudo cargar el área)', 'Cerrar', { duration: 3000 });
+  //             }
+  //           });
+  //         }
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error al obtener trabajador:', error);
+  //       this.snackBar.open(`No se encontró el expediente ${expediente}`, 'Cerrar', { duration: 4000 });
+        
+  //       // Limpiamos los campos visuales y ocultos si hay error
+  //       this.formReparacion.patchValue({ nombreUsuario: '', idArea: '', areaDescripcion: '' });
+  //     }
+  //   });
+  // }
 
   // --- GUARDAR ---
   guardarReparacion(): void {
@@ -166,7 +252,7 @@ export class RegistrarReparacionComponent implements OnInit {
 
     const form = this.formReparacion.value;
 
-    // EMPAQUETADO: Transformamos los datos planos al formato anidado que exige tu backend
+    // Transformamos los datos planos al formato anidado que exige el backend
     const payload = {
       idReparacion: 0,
       tipoEquipo: form.idTipoEquipo ? { idTipoEquipo: Number(form.idTipoEquipo) } : null,
