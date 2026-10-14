@@ -41,6 +41,6 @@ export const routes: Routes = [ //Aquí defines todas las rutas de tu app. Es un
     ]},
   { 
     path: '**', 
-    redirectTo: 'login' 
+    redirectTo: 'dashboard' 
   } // Redireccionamiento para rutas no encontradas
 ];
